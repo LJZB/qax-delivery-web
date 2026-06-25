@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "test": "playwright test",
-    "test:login": "playwright test tests/login.spec.ts",
-    "test:ui": "playwright test --ui",
+    "test:chromium": "playwright test tests/clinic-login.spec.ts --project=chromium",
     "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
     "test:debug": "playwright test --debug",
     "report": "playwright show-report"
   },
