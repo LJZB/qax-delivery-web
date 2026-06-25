@@ -31,9 +31,9 @@ Validar que un usuario pueda iniciar sesión correctamente con credenciales vál
 
 El test se encuentra en:
 
-~~~bash
+```bash
 tests/login.spec.ts
-~~~
+```
 
 ## Estructura del test
 
@@ -53,50 +53,91 @@ Este proyecto usa `pnpm`.
 
 Para instalar las dependencias:
 
-~~~bash
+```bash
 pnpm install
-~~~
+```
 
 ## Ejecución del test
 
 Para ejecutar únicamente el test de login:
 
-~~~bash
+```bash
 pnpm run test:login
-~~~
+```
 
 Para ejecutar todos los tests del proyecto:
 
-~~~bash
+```bash
 pnpm run test
-~~~
+```
 
 ## Otros comandos disponibles
 
 Ejecutar los tests en modo headed:
 
-~~~bash
+```bash
 pnpm run test:headed
-~~~
+```
 
 Abrir Playwright UI:
 
-~~~bash
+```bash
 pnpm run test:ui
-~~~
+```
 
 Ejecutar en modo debug:
 
-~~~bash
+```bash
 pnpm run test:debug
-~~~
+```
 
 Abrir el reporte de Playwright:
 
-~~~bash
+```bash
 pnpm run report
-~~~
+```
 
 ## Resultado esperado
 
 El test debe ejecutarse correctamente en los navegadores configurados por Playwright y finalizar con estado exitoso.
+
+---
+
+# Challenge 1: Login en QAX Clinic
+
+Automatización del login de QAX Clinic y validación del acceso al formulario de reserva de citas médicas.
+
+## Objetivo
+
+Validar que un paciente registrado pueda iniciar sesión con documento y contraseña, y que el sistema lo redirija correctamente a la página de reserva de cita.
+
+## Datos utilizados
+
+- URL: https://qaxpert.com/lab/sites/stage-1/clinic/index.html
+- Documento: 1234567890
+- Password: paciente123
+- Título esperado: QAX Clinic - Login
+- URL esperada: appointment.html
+- Encabezado esperado: Reservar Cita Médica
+
+## Archivo principal
+
+```bash
+tests/clinic-login.spec.ts
+```
+
+## Validaciones principales
+
+- La página de login carga correctamente.
+- El campo documento solo acepta caracteres numéricos.
+- El login redirige a `appointment.html`.
+- El encabezado `Reservar Cita Médica` es visible.
+- Los campos del formulario de cita están visibles.
+
+## Ejecución
+
+Para ejecutar solo el challenge en Chromium:
+
+```bash
+pnpm test:chromium tests/clinic-login.spec.ts
+```
