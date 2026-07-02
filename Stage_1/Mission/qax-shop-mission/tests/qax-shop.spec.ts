@@ -20,6 +20,7 @@ test.describe('QAX Shop - Mission 1', () => {
       await page.goto('./index.html');
       await page.evaluate(() => localStorage.clear());
       await page.reload();
+      await expect(page).toHaveURL(/index\.html/);
     });
 
     await test.step('Validar catalogo con 12 productos', async () => {
@@ -49,6 +50,7 @@ test.describe('QAX Shop - Mission 1', () => {
     await test.step('Navegar al checkout', async () => {
       // El botón real del carrito se llama "Ir a Pagar" y debería llevar al checkout.
       await page.getByRole('link', { name: /ir a pagar/i }).click();
+      await expect(page).toHaveURL(/checkout\.html/);
     });
 
     await test.step('Validar formulario de checkout', async () => {
