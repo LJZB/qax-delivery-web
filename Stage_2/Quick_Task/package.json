@@ -8,7 +8,9 @@
     "test:mouse-over": "playwright test mouse-over.spec.ts --config=playwright.quick-task.config.cjs --project=chromium",
     "test:dropdown-clicks": "playwright test dropdown-clicks.spec.ts --config=playwright.quick-task.config.cjs --project=chromium",
     "test:drag-and-drop": "playwright test drag-and-drop.spec.ts --config=playwright.quick-task.config.cjs --project=chromium",
-    "test:subir-archivo": "playwright test subir-archivo.spec.ts --config=playwright.quick-task.config.cjs --project=chromium"
+    "test:subir-archivo": "playwright test subir-archivo.spec.ts --config=playwright.quick-task.config.cjs --project=chromium",
+    "test:simular-teclas": "playwright test simular-teclas.spec.ts --config=playwright.quick-task.config.cjs --project=chromium",
+    "test:scroll": "playwright test scroll.spec.ts --config=playwright.quick-task.config.cjs --project=chromium"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",
