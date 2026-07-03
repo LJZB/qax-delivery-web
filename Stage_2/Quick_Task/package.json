@@ -12,7 +12,8 @@
     "test:simular-teclas": "playwright test simular-teclas.spec.ts --config=playwright.quick-task.config.cjs --project=chromium",
     "test:scroll": "playwright test scroll.spec.ts --config=playwright.quick-task.config.cjs --project=chromium",
     "test:popup": "playwright test popup-alert.spec.ts --config=playwright.quick-task.config.cjs --project=chromium",
-    "test:pestanas": "playwright test pestanas.spec.ts --config=playwright.quick-task.config.cjs --project=chromium"
+    "test:pestanas": "playwright test pestanas.spec.ts --config=playwright.quick-task.config.cjs --project=chromium",
+    "test:iframe": "playwright test iframe.spec.ts --config=playwright.quick-task.config.cjs --project=chromium"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.0",
