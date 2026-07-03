@@ -1,0 +1,13 @@
+{
+  "name": "stage-2-quick-task",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "test": "playwright test --config=playwright.quick-task.config.cjs",
+    "test:click-forzado": "playwright test click-forzado.spec.ts --config=playwright.quick-task.config.cjs --project=chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.0",
+    "@types/node": "^26.0.0"
+  }
+}
