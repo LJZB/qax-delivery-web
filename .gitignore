@@ -1,0 +1,8 @@
+# Bloque de dependencias:
+# Se ignoran los paquetes instalados localmente para no versionar artefactos generados.
+node_modules/
+
+# Bloque de resultados:
+# Se ignoran las salidas temporales de ejecucion y reportes de Playwright.
+test-results/
+playwright-report/
