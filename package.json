@@ -1,0 +1,12 @@
+{
+  "name": "stage-3-quick-task",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test --config=playwright.quick-task.config.cjs"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}
