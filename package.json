@@ -1,0 +1,13 @@
+{
+  "name": "stage-3-quick-task",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "playwright test --config=playwright.quick-task.config.cjs",
+    "test:title": "playwright test tests/qax-paylater-title.spec.ts --config=playwright.quick-task.config.cjs --project=chromium"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}
