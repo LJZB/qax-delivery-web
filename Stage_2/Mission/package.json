@@ -1,0 +1,29 @@
+{
+  "name": "ch3-qax-crypto-exchange",
+  "version": "1.0.0",
+  "description": "Challenge 3 - QAX Crypto Exchange",
+  "main": "index.js",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:hu01": "playwright test -g \"HU-01\"",
+    "test:hu01:headed": "playwright test -g \"HU-01\" --headed",
+    "report": "playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.8.0",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "typescript": "6.0.3"
+  }
+}
