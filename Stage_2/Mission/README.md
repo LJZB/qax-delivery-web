@@ -8,9 +8,9 @@ https://qaxpert.com/lab/sites/stage-2/crypto/index.html
 
 ## Alcance actual
 
-Este corte automatiza la HU-01 de compra de Bitcoin y la HU-02 de portafolio de inversion.
+Este corte automatiza las HU-01 a HU-03 de QAX Crypto Exchange.
 
-Las HU-03 a HU-05 quedan fuera de este corte y se podran agregar en iteraciones posteriores.
+Las HU-04 y HU-05 quedan fuera de este corte y se podran agregar en iteraciones posteriores.
 
 ## HU-01: Compra de criptomoneda
 
@@ -68,6 +68,24 @@ El caso documentado esta en:
 test-cases/hu-02-portafolio.md
 ```
 
+## HU-03: Widget BTC en iframe
+
+### Cobertura automatizada
+
+- Valida que el iframe BTC carga su contenido interno.
+- Valida el precio actual de BTC en COP por su formato dinamico.
+- Valida que el grafico renderiza exactamente 20 barras.
+- Valida cambio, volumen, maximo y minimo de las ultimas 24 horas.
+- Valida que el indicador En vivo esta presente.
+
+### Caso de prueba en Gherkin
+
+El caso documentado esta en:
+
+```text
+test-cases/hu-03-widget-btc.md
+```
+
 ## Instalacion
 
 ```bash
@@ -104,6 +122,18 @@ Ejecutar HU-02 en modo headed:
 
 ```bash
 pnpm run test:hu02:headed
+```
+
+Ejecutar solo HU-03:
+
+```bash
+pnpm run test:hu03
+```
+
+Ejecutar HU-03 en modo headed:
+
+```bash
+pnpm run test:hu03:headed
 ```
 
 Abrir reporte HTML:
