@@ -8,9 +8,9 @@ https://qaxpert.com/lab/sites/stage-2/crypto/index.html
 
 ## Alcance actual
 
-Este corte automatiza las HU-01 a HU-04 de QAX Crypto Exchange.
+Este proyecto automatiza las HU-01 a HU-05 de QAX Crypto Exchange.
 
-La HU-05 queda fuera de este corte y se podra agregar en una iteracion posterior.
+La cobertura funcional descrita para la mision se encuentra automatizada.
 
 ## HU-01: Compra de criptomoneda
 
@@ -103,6 +103,23 @@ El caso documentado esta en:
 test-cases/hu-04-venta-cripto.md
 ```
 
+## HU-05: Historial de transacciones
+
+### Cobertura automatizada
+
+- Valida el filtro por tipo Compras.
+- Valida la busqueda por simbolo BTC.
+- Valida el ordenamiento por Mayor monto.
+- Valida la combinacion simultanea de filtro y busqueda.
+
+### Caso de prueba en Gherkin
+
+Los escenarios documentados estan en:
+
+```text
+test-cases/hu-05-historial.md
+```
+
 ## Instalacion
 
 ```bash
@@ -163,6 +180,18 @@ Ejecutar HU-04 en modo headed:
 
 ```bash
 pnpm run test:hu04:headed
+```
+
+Ejecutar solo HU-05:
+
+```bash
+pnpm run test:hu05
+```
+
+Ejecutar HU-05 en modo headed:
+
+```bash
+pnpm run test:hu05:headed
 ```
 
 Abrir reporte HTML:
