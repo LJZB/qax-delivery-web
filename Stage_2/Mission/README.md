@@ -8,9 +8,9 @@ https://qaxpert.com/lab/sites/stage-2/crypto/index.html
 
 ## Alcance actual
 
-Este corte automatiza las HU-01 a HU-03 de QAX Crypto Exchange.
+Este corte automatiza las HU-01 a HU-04 de QAX Crypto Exchange.
 
-Las HU-04 y HU-05 quedan fuera de este corte y se podran agregar en iteraciones posteriores.
+La HU-05 queda fuera de este corte y se podra agregar en una iteracion posterior.
 
 ## HU-01: Compra de criptomoneda
 
@@ -86,6 +86,23 @@ El caso documentado esta en:
 test-cases/hu-03-widget-btc.md
 ```
 
+## HU-04: Venta de criptomoneda con validaciones
+
+### Cobertura automatizada
+
+- Valida que el modo Vender cambia el texto y el color del boton de accion.
+- Valida que una venta superior a la tenencia disponible queda deshabilitada.
+- Valida que una venta parcial aumenta el saldo COP y reduce la tenencia BTC.
+- Valida que el historial registra la operacion con tipo Venta.
+
+### Caso de prueba en Gherkin
+
+El caso documentado esta en:
+
+```text
+test-cases/hu-04-venta-cripto.md
+```
+
 ## Instalacion
 
 ```bash
@@ -134,6 +151,18 @@ Ejecutar HU-03 en modo headed:
 
 ```bash
 pnpm run test:hu03:headed
+```
+
+Ejecutar solo HU-04:
+
+```bash
+pnpm run test:hu04
+```
+
+Ejecutar HU-04 en modo headed:
+
+```bash
+pnpm run test:hu04:headed
 ```
 
 Abrir reporte HTML:

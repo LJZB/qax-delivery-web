@@ -13,6 +13,8 @@
     "test:hu02:headed": "playwright test -g \"HU-02\" --headed",
     "test:hu03": "playwright test -g \"HU-03\"",
     "test:hu03:headed": "playwright test -g \"HU-03\" --headed",
+    "test:hu04": "playwright test -g \"HU-04\"",
+    "test:hu04:headed": "playwright test -g \"HU-04\" --headed",
     "report": "playwright show-report"
   },
   "keywords": [],
