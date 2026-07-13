@@ -1,16 +1,23 @@
-# Challenge 3: QAX Crypto Exchange
+# Stage 2 Mission: QAX Crypto Exchange
 
-Automatizacion del Challenge 3 de Stage 2 sobre QAX Crypto Exchange.
+Proyecto de automatizacion construido desde cero con Playwright, TypeScript y pnpm para QAX Crypto Exchange.
 
 ## Sitio de practica
 
 https://qaxpert.com/lab/sites/stage-2/crypto/index.html
 
-## Alcance actual
+## Tecnologias
+
+- Playwright.
+- TypeScript.
+- pnpm.
+- Gherkin para documentar los casos de prueba.
+
+## Cobertura de la mision
 
 Este proyecto automatiza las HU-01 a HU-05 de QAX Crypto Exchange.
 
-La cobertura funcional descrita para la mision se encuentra automatizada.
+Los casos Gherkin y las pruebas automatizadas cubren el 100% de los criterios de aceptacion descritos. La suite completa ejecuta 9 pruebas.
 
 ## HU-01: Compra de criptomoneda
 
@@ -122,17 +129,33 @@ test-cases/hu-05-historial.md
 
 ## Instalacion
 
+Instalar las dependencias del proyecto:
+
 ```bash
 pnpm install
 ```
 
-## Ejecucion
+Instalar Chromium para Playwright:
 
-Ejecutar toda la suite:
+```bash
+pnpm exec playwright install chromium
+```
+
+## Ejecucion completa
+
+Ejecutar las HU-01 a HU-05:
 
 ```bash
 pnpm test
 ```
+
+Ejecutar toda la suite con navegador visible:
+
+```bash
+pnpm run test:headed
+```
+
+## Ejecucion por historia de usuario
 
 Ejecutar solo HU-01:
 
