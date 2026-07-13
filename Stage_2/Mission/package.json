@@ -9,6 +9,8 @@
     "test:debug": "playwright test --debug",
     "test:hu01": "playwright test -g \"HU-01\"",
     "test:hu01:headed": "playwright test -g \"HU-01\" --headed",
+    "test:hu02": "playwright test -g \"HU-02\"",
+    "test:hu02:headed": "playwright test -g \"HU-02\" --headed",
     "report": "playwright show-report"
   },
   "keywords": [],

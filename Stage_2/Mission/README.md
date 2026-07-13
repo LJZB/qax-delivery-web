@@ -8,9 +8,9 @@ https://qaxpert.com/lab/sites/stage-2/crypto/index.html
 
 ## Alcance actual
 
-Este primer corte automatiza solo la HU-01: compra de Bitcoin con saldo suficiente.
+Este corte automatiza la HU-01 de compra de Bitcoin y la HU-02 de portafolio de inversion.
 
-Las HU-02 a HU-05 quedan fuera de este corte por decision de alcance y se podran agregar en iteraciones posteriores.
+Las HU-03 a HU-05 quedan fuera de este corte y se podran agregar en iteraciones posteriores.
 
 ## HU-01: Compra de criptomoneda
 
@@ -51,6 +51,23 @@ test-cases/hu-01-compra-btc.md
 - Valida que BTC aparece en el portafolio.
 - Valida que la transaccion aparece en el historial como Compra de BTC.
 
+## HU-02: Portafolio de inversion
+
+### Cobertura automatizada
+
+- Valida las tarjetas de balance COP, total invertido y numero de criptos.
+- Valida que BTC aparece en holdings con cantidad e invertido correctos.
+- Valida que el grafico dona SVG tiene un segmento de color y porcentaje para BTC.
+- Valida los mensajes de tabla y grafico cuando el portafolio esta vacio.
+
+### Caso de prueba en Gherkin
+
+El caso documentado esta en:
+
+```text
+test-cases/hu-02-portafolio.md
+```
+
 ## Instalacion
 
 ```bash
@@ -75,6 +92,18 @@ Ejecutar HU-01 en modo headed:
 
 ```bash
 pnpm run test:hu01:headed
+```
+
+Ejecutar solo HU-02:
+
+```bash
+pnpm run test:hu02
+```
+
+Ejecutar HU-02 en modo headed:
+
+```bash
+pnpm run test:hu02:headed
 ```
 
 Abrir reporte HTML:
