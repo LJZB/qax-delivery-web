@@ -24,7 +24,7 @@ async function prepareCleanCryptoState(page: Page) {
   }, initialBalanceCop);
 }
 
-test.describe('Challenge 3: QAX Crypto Exchange', () => {
+test.describe('HU-01: Compra de criptomoneda', () => {
   test('HU-01: Compra exitosa de Bitcoin con saldo suficiente', async ({ page }) => {
     await test.step('Given el inversionista tiene saldo inicial y abre Comprar/Vender', async () => {
       // Precondicion de negocio: saldo inicial COP 10,000,000 y sin operaciones previas.
