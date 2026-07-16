@@ -1,0 +1,22 @@
+{
+  "name": "qax-pw-web-stg3-ch2",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Challenge 2 Stage 3 - Automatizacion de QAXTrade con Page Object Model",
+  "scripts": {
+    "test": "playwright test",
+    "test:hu01": "playwright test --grep HU-01",
+    "test:hu02": "playwright test --grep HU-02",
+    "test:hu03": "playwright test --grep HU-03",
+    "test:hu04": "playwright test --grep HU-04",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.42.0",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.3.0"
+  }
+}
