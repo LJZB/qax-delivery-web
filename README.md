@@ -2,19 +2,20 @@
 
 ## Alcance implementado
 
-- Punto 1: validacion del titulo de la pagina.
-- Punto 2: validacion de visibilidad de la seccion del simulador de credito.
-- Puntos 3 al 10: automatizacion del formulario principal de `QAX PayLater`.
+- Punto 1: validación del título de la página.
+- Punto 2: validación de la visibilidad de la sección del simulador de crédito.
+- Puntos 3 al 10: automatización del formulario principal de `QAX PayLater`.
 
 ## Notas importantes del sitio actual
 
 ### Diferencias entre el enunciado y la sandbox
 
-- El punto 3 pide que el boton de accion este deshabilitado inicialmente, pero en `apply-step1.html` el boton `#btnSubmit` aparece habilitado desde la carga inicial.
-- El punto 4 pide validar que al llenar obligatorios el boton se habilite. En la sandbox actual el boton ya viene habilitado, por lo que no existe transicion visible de deshabilitado a habilitado.
-- El punto 10 pide borde rojo en campos vacios al enviar, pero la implementacion actual muestra mensajes de error (`.error-msg`) y no aplica borde rojo a los inputs.
+- El punto 3 pide que el botón de acción esté deshabilitado inicialmente, pero en `apply-step1.html` el botón `#btnSubmit` aparece habilitado desde la carga inicial.
+- El punto 4 pide validar que, al llenar los campos obligatorios, el botón se habilite. En la sandbox actual, el botón ya viene habilitado, por lo que no existe una transición visible de deshabilitado a habilitado.
+- El punto 10 pide un borde rojo en los campos vacíos al enviar, pero la implementación actual muestra mensajes de error (`.error-msg`) y no aplica un borde rojo a los inputs.
 
-## Decision de automatizacion
+## Decisión de automatización
 
-Los casos fueron implementados fieles al enunciado.  
-Si la sandbox no cumple exactamente la regla pedida, la prueba queda como detector de desviacion funcional y puede fallar intencionalmente hasta que el comportamiento del sitio sea corregido.
+Los casos fueron implementados fielmente según el enunciado.
+
+Si la sandbox no cumple exactamente con la regla solicitada, la prueba queda como detector de desviaciones funcionales y puede fallar intencionalmente hasta que se corrija el comportamiento del sitio.
