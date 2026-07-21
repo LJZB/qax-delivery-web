@@ -3,6 +3,14 @@ __pycache__/
 *.py[codz]
 *$py.class
 
+# PlayWright
+node_modules/
+test-results/
+playwright-report/
+Stage_4/Quick_Task/.auth/
+
+
+
 # C extensions
 *.so
 

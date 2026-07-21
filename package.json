@@ -4,9 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "playwright test --config=playwright.quick-task.config.cjs"
+    "test": "playwright test --config=playwright.quick-task.config.cjs",
+    "auth:stage4": "node Stage_4/Quick_Task/save-auth.mjs",
+    "test:stage4": "playwright test --config=Stage_4/Quick_Task/playwright.config.ts",
+    "typecheck:stage4": "tsc -p Stage_4/Quick_Task/tsconfig.json"
   },
   "devDependencies": {
-    "@playwright/test": "^1.61.1"
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.1",
+    "typescript": "^7.0.2"
   }
 }
