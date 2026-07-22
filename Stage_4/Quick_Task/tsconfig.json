@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    // Bloque de compilación:
+    // Verifica TypeScript moderno y los módulos ES utilizados por el proyecto.
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "noEmit": true,
+    "types": ["node"]
+  },
+  // Bloque de alcance:
+  // Limita la verificación a la configuración, el test y las utils del Quick Task.
+  "include": [
+    "mercado-libre.spec.ts",
+    "playwright.config.ts",
+    "utils/**/*.ts"
+  ]
+}

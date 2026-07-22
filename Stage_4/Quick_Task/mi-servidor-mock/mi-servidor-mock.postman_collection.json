@@ -1,0 +1,227 @@
+{
+  "info": {
+    "_postman_id": "bb847b6f-a9ba-47af-93ce-d666687549ce",
+    "name": "Mi Servidor Mock - Stage 4",
+    "description": "Colección para validar los servicios locales de usuarios, productos y órdenes en el puerto 4001.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Users",
+      "item": [
+        {
+          "name": "Obtener todos los usuarios",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/users",
+            "description": "Obtiene todos los usuarios almacenados en memoria."
+          }
+        },
+        {
+          "name": "Obtener un usuario por ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/1",
+            "description": "Obtiene el usuario inicial con ID 1."
+          }
+        },
+        {
+          "name": "Crear un nuevo usuario",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Bloque de preparación:",
+                  "// Guarda el ID real para que la petición DELETE elimine el recurso creado.",
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('createdUserId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"UsuarioQA\",\n  \"email\": \"usuarioqa@test.com\"\n}"
+            },
+            "url": "{{baseUrl}}/api/users",
+            "description": "Crea un usuario ficticio para la práctica local."
+          }
+        },
+        {
+          "name": "Eliminar el usuario creado",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/{{createdUserId}}",
+            "description": "Elimina el usuario creado por la petición POST."
+          }
+        },
+        {
+          "name": "Error 404 - usuario inexistente",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/users/999",
+            "description": "Consulta un ID inexistente para obtener la evidencia del estado 404."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products",
+      "item": [
+        {
+          "name": "Obtener todos los productos",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/products",
+            "description": "Obtiene todos los productos almacenados en memoria."
+          }
+        },
+        {
+          "name": "Crear un nuevo producto",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Bloque de preparación:",
+                  "// Guarda el ID real para que la petición DELETE elimine el recurso creado.",
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('createdProductId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Teclado QA\",\n  \"precio\": 150000,\n  \"categoria\": \"tecnologia\"\n}"
+            },
+            "url": "{{baseUrl}}/api/products",
+            "description": "Crea un producto ficticio para la práctica local."
+          }
+        },
+        {
+          "name": "Eliminar el producto creado",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": "{{baseUrl}}/api/products/{{createdProductId}}",
+            "description": "Elimina el producto creado por la petición POST."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Orders",
+      "item": [
+        {
+          "name": "Obtener todas las órdenes",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/orders",
+            "description": "Obtiene todas las órdenes creadas durante la ejecución actual."
+          }
+        },
+        {
+          "name": "Crear una nueva orden",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "// Bloque de preparación:",
+                  "// Guarda el ID real para que la petición PUT actualice la orden creada.",
+                  "if (pm.response.code === 201) {",
+                  "  pm.collectionVariables.set('createdOrderId', pm.response.json().id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"usuario\": \"UsuarioQA\",\n  \"productoId\": 1,\n  \"cantidad\": 1\n}"
+            },
+            "url": "{{baseUrl}}/api/orders",
+            "description": "Crea una orden ficticia con estado inicial pendiente."
+          }
+        },
+        {
+          "name": "Actualizar el estado de la orden",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"estado\": \"confirmada\"\n}"
+            },
+            "url": "{{baseUrl}}/api/orders/{{createdOrderId}}",
+            "description": "Actualiza a confirmada la orden creada por la petición POST."
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:4001",
+      "type": "string"
+    },
+    {
+      "key": "createdUserId",
+      "value": "3",
+      "type": "string"
+    },
+    {
+      "key": "createdProductId",
+      "value": "3",
+      "type": "string"
+    },
+    {
+      "key": "createdOrderId",
+      "value": "1",
+      "type": "string"
+    }
+  ]
+}
