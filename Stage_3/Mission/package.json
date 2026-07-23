@@ -1,0 +1,33 @@
+{
+  "name": "stage-3-mission-qaxtickets",
+  "version": "1.0.0",
+  "description": "Mission del Stage 3 - Automatizacion de QAXTickets",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:debug": "playwright test --debug",
+    "test:hu01": "playwright test -g \"HU-01\"",
+    "test:hu01:headed": "playwright test -g \"HU-01\" --headed",
+    "test:hu02": "playwright test -g \"HU-02\"",
+    "test:hu02:headed": "playwright test -g \"HU-02\" --headed",
+    "test:hu03": "playwright test -g \"HU-03\"",
+    "test:hu03:headed": "playwright test -g \"HU-03\" --headed",
+    "test:hu04": "playwright test -g \"HU-04\"",
+    "test:hu04:headed": "playwright test -g \"HU-04\" --headed",
+    "typecheck": "tsc --noEmit",
+    "report": "playwright show-report"
+  },
+  "type": "module",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.8.0",
+      "onFail": "download"
+    }
+  },
+  "devDependencies": {
+    "@playwright/test": "1.61.1",
+    "@types/node": "^22.0.0",
+    "typescript": "6.0.3"
+  }
+}
