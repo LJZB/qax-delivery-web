@@ -1,4 +1,4 @@
-import { defineConfig, devices } from '@playwright/test';
+﻿import { defineConfig, devices } from '@playwright/test';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -6,8 +6,8 @@ dotenv.config();
 const environment = process.env.ENV ?? 'qa';
 
 const urls: Record<string, string> = {
-  qa: 'https://qaxpert.com/lab/sites/stage-4/marketplace',
-  prod: 'https://qaxpert.com/lab/sites/stage-4/marketplace',
+  qa: 'https://qaxpert.com/lab/sites/stage-4/marketplace/',
+  prod: 'https://qaxpert.com/lab/sites/stage-4/marketplace/',
 };
 
 if (!urls[environment]) {
