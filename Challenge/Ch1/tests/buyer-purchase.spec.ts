@@ -8,7 +8,7 @@ import { OrdersPage } from '../pages/buyer/OrdersPage.js';
 
 test.describe('HU-01 Compra de producto', () => {
   test('comprador busca un producto, lo agrega al carrito y completa la compra', async ({ page }) => {
-    // Page Objects keep locators and page-specific actions outside the test body.
+    // Bloque de Page Objects: centraliza acciones y validaciones de cada pantalla del flujo comprador.
     const homePage = new HomePage(page);
     const catalogPage = new BuyerCatalogPage(page);
     const productDetailPage = new ProductDetailPage(page);
@@ -16,7 +16,7 @@ test.describe('HU-01 Compra de producto', () => {
     const checkoutPage = new CheckoutPage(page);
     const ordersPage = new OrdersPage(page);
 
-    // Test data mirrors the buyer purchase scenario from the user story.
+    // Bloque de datos de prueba: define el producto buscado y la informacion de envio del comprador.
     const productName = 'Silla Gamer Corsair T3';
     const shippingData = {
       fullName: 'Luis Zuluaga',
@@ -26,7 +26,7 @@ test.describe('HU-01 Compra de producto', () => {
     };
 
     await test.step('Seleccionar el rol comprador', async () => {
-      // Acceptance criterion: selecting buyer navigates to the product catalog.
+      // Criterio: al seleccionar comprador, la aplicacion debe navegar al catalogo de productos.
       await homePage.goto();
       await homePage.expectLoaded();
       await homePage.selectBuyerRole();
@@ -34,7 +34,7 @@ test.describe('HU-01 Compra de producto', () => {
     });
 
     await test.step('Buscar y abrir el producto desde el catalogo', async () => {
-      // Acceptance criterion: catalog shows products and allows opening product detail.
+      // Criterio: el catalogo muestra productos y permite abrir el detalle de un producto filtrado.
       await catalogPage.expectProductVisible('iPhone 14 Pro 128GB');
       await catalogPage.search('silla');
       await catalogPage.expectProductVisible(productName);
@@ -43,13 +43,13 @@ test.describe('HU-01 Compra de producto', () => {
     });
 
     await test.step('Agregar el producto al carrito', async () => {
-      // Acceptance criterion: adding a product updates the cart badge.
+      // Criterio: al agregar el producto, el badge del carrito se actualiza a una unidad.
       await productDetailPage.addToCart();
       await catalogPage.expectCartCount(1);
     });
 
     await test.step('Validar carrito y continuar al checkout', async () => {
-      // Acceptance criterion: the cart summarizes product, price, quantity and subtotal.
+      // Criterio: el carrito presenta producto, precio, cantidad y subtotal antes de pagar.
       await catalogPage.openCart();
       await cartPage.expectLoaded();
       await cartPage.updateQuantity(1);
@@ -57,7 +57,7 @@ test.describe('HU-01 Compra de producto', () => {
     });
 
     await test.step('Completar envio y metodo de pago', async () => {
-      // Acceptance criterion: checkout requests shipping and payment in two steps.
+      // Criterio: el checkout solicita datos de envio y metodo de pago en dos pasos.
       await checkoutPage.expectShippingStep();
       await checkoutPage.fillShipping(shippingData);
       await checkoutPage.continueToPayment();
@@ -69,7 +69,7 @@ test.describe('HU-01 Compra de producto', () => {
     });
 
     await test.step('Confirmar pedido y validar la orden creada', async () => {
-      // Acceptance criterion: confirming the order shows the created purchase as confirmed.
+      // Criterio: al confirmar el pedido, se muestra la orden creada con estado confirmado.
       await checkoutPage.confirmOrder();
       await ordersPage.expectLoaded();
       await ordersPage.expectLatestOrderForCustomer(

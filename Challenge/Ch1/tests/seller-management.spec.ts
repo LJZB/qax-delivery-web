@@ -11,7 +11,7 @@ import { SellerOrdersPage } from '../pages/seller/SellerOrdersPage.js';
 
 test.describe('HU-02 Gestion de productos como vendedor', () => {
   test('vendedor publica un producto y marca una orden como enviada', async ({ page }) => {
-    // Page Objects isolate locators and business actions for the seller workflow.
+    // Bloque de Page Objects: reutiliza pantallas de vendedor y comprador para cubrir la historia completa.
     const homePage = new HomePage(page);
     const catalogPage = new BuyerCatalogPage(page);
     const productDetailPage = new ProductDetailPage(page);
@@ -21,7 +21,7 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
     const publishProductPage = new PublishProductPage(page);
     const sellerOrdersPage = new SellerOrdersPage(page);
 
-    // Product data comes from the Codegen exploration, with a local fixture replacing the temp upload file.
+    // Bloque de producto: datos capturados desde Codegen y usados para publicar en la tienda del vendedor.
     const product = {
       name: 'Nintendo Switch OLED',
       description: 'Nintendo Switch OLED con motivo de Tears of the Kingdom',
@@ -31,7 +31,7 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
       imagePath: fileURLToPath(new URL('../fixtures/product-image.png', import.meta.url)),
     };
 
-    // Buyer data creates a fresh order because the seeded seller orders are already delivered.
+    // Bloque de comprador: genera una orden nueva porque las ordenes semilla del SUT ya estan entregadas.
     const buyerShippingData = {
       fullName: 'Luis QA',
       address: 'Calle Falsa 123',
@@ -40,7 +40,7 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
     };
 
     await test.step('Seleccionar el rol vendedor', async () => {
-      // Acceptance criterion: selecting seller navigates to the products table.
+      // Criterio: al seleccionar vendedor, la aplicacion navega a la tabla de mis productos.
       await homePage.goto();
       await homePage.expectLoaded();
       await homePage.selectSellerRole();
@@ -48,20 +48,20 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
     });
 
     await test.step('Publicar un nuevo producto', async () => {
-      // Acceptance criterion: the form allows entering name, description, category and price.
+      // Criterio: el formulario permite ingresar nombre, descripcion, categoria y precio.
       await sellerProductsPage.openPublishProductForm();
       await publishProductPage.expectLoaded();
       await publishProductPage.publishProduct(product);
     });
 
     await test.step('Validar que el producto aparece en la tabla del vendedor', async () => {
-      // Acceptance criterion: saving the product returns it to the seller products table.
+      // Criterio: al guardar, el producto aparece en la tabla de productos del vendedor.
       await sellerProductsPage.expectLoaded();
       await sellerProductsPage.expectProductInTable(product.name);
     });
 
     await test.step('Crear una orden pendiente para el producto publicado', async () => {
-      // Setup: buy the new product so the seller has an order that can be marked as sent.
+      // Preparacion: compra el producto publicado para que exista una orden accionable del vendedor.
       await sellerProductsPage.switchToBuyerCatalog();
       await homePage.expectLoaded();
       await homePage.selectBuyerRole();
@@ -87,7 +87,7 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
     });
 
     await test.step('Validar ordenes recibidas con estado', async () => {
-      // Acceptance criterion: received orders show order data and current status.
+      // Criterio: en ordenes recibidas se muestran pedidos con su estado actual.
       await sellerOrdersPage.goto();
       await sellerOrdersPage.expectLoaded();
       await sellerOrdersPage.expectOrdersWithStatus();
@@ -95,7 +95,7 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
     });
 
     await test.step('Marcar una orden como enviada', async () => {
-      // Acceptance criterion: clicking Mark as Sent changes an order status to Enviado.
+      // Criterio: al hacer clic en Marcar como Enviado, el estado del pedido cambia.
       await sellerOrdersPage.markFirstPendingOrderAsSent();
       await sellerOrdersPage.expectSentStatusVisible();
     });
