@@ -9,7 +9,7 @@ import { SellerProductsPage } from '../pages/seller/SellerProductsPage.js';
 import { PublishProductPage } from '../pages/seller/PublishProductPage.js';
 import { SellerOrdersPage } from '../pages/seller/SellerOrdersPage.js';
 
-test.describe('HU-02 Gestion de productos como vendedor', () => {
+test.describe('HU-02 Gestión de productos como vendedor', () => {
   test('vendedor publica un producto y marca una orden como enviada', async ({ page }) => {
     // Bloque de Page Objects: reutiliza pantallas de vendedor y comprador para cubrir la historia completa.
     const homePage = new HomePage(page);
@@ -31,7 +31,7 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
       imagePath: fileURLToPath(new URL('../fixtures/product-image.png', import.meta.url)),
     };
 
-    // Bloque de comprador: genera una orden nueva porque las ordenes semilla del SUT ya estan entregadas.
+    // Bloque de comprador: genera una orden nueva porque las órdenes semilla del SUT ya están entregadas.
     const buyerShippingData = {
       fullName: 'Luis QA',
       address: 'Calle Falsa 123',
@@ -40,7 +40,7 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
     };
 
     await test.step('Seleccionar el rol vendedor', async () => {
-      // Criterio: al seleccionar vendedor, la aplicacion navega a la tabla de mis productos.
+      // Criterio: al seleccionar vendedor, la aplicación navega a la tabla de mis productos.
       await homePage.goto();
       await homePage.expectLoaded();
       await homePage.selectSellerRole();
@@ -48,7 +48,7 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
     });
 
     await test.step('Publicar un nuevo producto', async () => {
-      // Criterio: el formulario permite ingresar nombre, descripcion, categoria y precio.
+      // Criterio: el formulario permite ingresar nombre, descripción, categoría y precio.
       await sellerProductsPage.openPublishProductForm();
       await publishProductPage.expectLoaded();
       await publishProductPage.publishProduct(product);
@@ -61,7 +61,7 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
     });
 
     await test.step('Crear una orden pendiente para el producto publicado', async () => {
-      // Preparacion: compra el producto publicado para que exista una orden accionable del vendedor.
+      // Preparación: compra el producto publicado para que exista una orden accionable del vendedor.
       await sellerProductsPage.switchToBuyerCatalog();
       await homePage.expectLoaded();
       await homePage.selectBuyerRole();
@@ -86,8 +86,8 @@ test.describe('HU-02 Gestion de productos como vendedor', () => {
       await checkoutPage.confirmOrder();
     });
 
-    await test.step('Validar ordenes recibidas con estado', async () => {
-      // Criterio: en ordenes recibidas se muestran pedidos con su estado actual.
+    await test.step('Validar órdenes recibidas con estado', async () => {
+      // Criterio: en órdenes recibidas se muestran pedidos con su estado actual.
       await sellerOrdersPage.goto();
       await sellerOrdersPage.expectLoaded();
       await sellerOrdersPage.expectOrdersWithStatus();

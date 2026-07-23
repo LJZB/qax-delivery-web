@@ -16,7 +16,7 @@ test.describe('HU-01 Compra de producto', () => {
     const checkoutPage = new CheckoutPage(page);
     const ordersPage = new OrdersPage(page);
 
-    // Bloque de datos de prueba: define el producto buscado y la informacion de envio del comprador.
+    // Bloque de datos de prueba: define el producto buscado y la información de envío del comprador.
     const productName = 'Silla Gamer Corsair T3';
     const shippingData = {
       fullName: 'Luis Zuluaga',
@@ -26,15 +26,15 @@ test.describe('HU-01 Compra de producto', () => {
     };
 
     await test.step('Seleccionar el rol comprador', async () => {
-      // Criterio: al seleccionar comprador, la aplicacion debe navegar al catalogo de productos.
+      // Criterio: al seleccionar comprador, la aplicación debe navegar al catálogo de productos.
       await homePage.goto();
       await homePage.expectLoaded();
       await homePage.selectBuyerRole();
       await catalogPage.expectLoaded();
     });
 
-    await test.step('Buscar y abrir el producto desde el catalogo', async () => {
-      // Criterio: el catalogo muestra productos y permite abrir el detalle de un producto filtrado.
+    await test.step('Buscar y abrir el producto desde el catálogo', async () => {
+      // Criterio: el catálogo muestra productos y permite abrir el detalle de un producto filtrado.
       await catalogPage.expectProductVisible('iPhone 14 Pro 128GB');
       await catalogPage.search('silla');
       await catalogPage.expectProductVisible(productName);
@@ -56,8 +56,8 @@ test.describe('HU-01 Compra de producto', () => {
       await cartPage.goToCheckout();
     });
 
-    await test.step('Completar envio y metodo de pago', async () => {
-      // Criterio: el checkout solicita datos de envio y metodo de pago en dos pasos.
+    await test.step('Completar envío y método de pago', async () => {
+      // Criterio: el checkout solicita datos de envío y método de pago en dos pasos.
       await checkoutPage.expectShippingStep();
       await checkoutPage.fillShipping(shippingData);
       await checkoutPage.continueToPayment();
