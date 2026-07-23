@@ -5,13 +5,13 @@ export class CartPage {
   readonly quantityInput: Locator;
 
   constructor(private readonly page: Page) {
-    // Cart controls used to validate line items and continue to checkout.
+    // Controles del carrito usados para validar la línea de compra y continuar al checkout.
     this.checkoutLink = page.getByRole('link', { name: 'Ir a Pagar' });
     this.quantityInput = page.getByRole('spinbutton');
   }
 
   async expectLoaded() {
-    // Table headers prove the cart summary is rendered before payment starts.
+    // Los encabezados de la tabla prueban que el resumen del carrito está renderizado.
     await expect(this.page.getByRole('columnheader', { name: 'Producto' })).toBeVisible();
     await expect(this.page.getByRole('columnheader', { name: 'Precio' })).toBeVisible();
     await expect(this.page.getByRole('columnheader', { name: 'Cantidad' })).toBeVisible();
@@ -20,12 +20,12 @@ export class CartPage {
   }
 
   async updateQuantity(quantity: number) {
-    // Quantity is normalized to one item so the final order total is predictable.
+    // Normaliza la cantidad a una unidad para que el total final sea predecible.
     await this.quantityInput.fill(String(quantity));
   }
 
   async goToCheckout() {
-    // Checkout starts the two-step shipping and payment form.
+    // El checkout inicia el formulario de envío y pago en dos pasos.
     await this.checkoutLink.click();
   }
 }

@@ -6,40 +6,40 @@ export class BuyerCatalogPage {
   readonly cartLink: Locator;
 
   constructor(private readonly page: Page) {
-    // Main catalog controls used by the buyer to search products and review the cart badge.
+    // Controles principales del catálogo para buscar productos y revisar el badge del carrito.
     this.heading = page.getByRole('heading', { name: /Catalogo de Productos|Cat.logo de Productos/ });
     this.searchInput = page.getByRole('textbox', { name: 'Buscar productos...' });
     this.cartLink = page.getByRole('link', { name: /Carrito/ });
   }
 
   async expectLoaded() {
-    // Catalog page must be visible after selecting the buyer role.
+    // El catálogo debe mostrarse después de seleccionar el rol comprador.
     await expect(this.heading).toBeVisible();
   }
 
   async expectProductVisible(productName: string) {
-    // Product visibility confirms that catalog data is rendered or filtered correctly.
+    // La visibilidad del producto confirma que el catálogo renderiza o filtra correctamente.
     await expect(this.page.getByText(productName)).toBeVisible();
   }
 
   async search(productName: string) {
-    // Search is submitted with Enter, matching the flow captured with Codegen.
+    // La búsqueda se envía con Enter, igual que en el flujo capturado con Codegen.
     await this.searchInput.fill(productName);
     await this.searchInput.press('Enter');
   }
 
   async openProduct(productName: string) {
-    // Opening by product name validates the buyer can navigate from catalog to detail.
+    // Abrir por nombre valida la navegación desde catálogo hacia detalle.
     await this.page.getByText(productName).click();
   }
 
   async openCart() {
-    // Cart navigation is reused after adding products from the detail page.
+    // La navegación al carrito se reutiliza después de agregar productos desde el detalle.
     await this.cartLink.click();
   }
 
   async expectCartCount(quantity: number) {
-    // The cart badge is the acceptance criterion that proves the cart was updated.
+    // El badge del carrito prueba que el producto fue agregado correctamente.
     await expect(this.cartLink).toContainText(`(${quantity})`);
   }
 }

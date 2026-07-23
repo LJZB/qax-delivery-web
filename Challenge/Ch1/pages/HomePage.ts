@@ -5,29 +5,29 @@ export class HomePage {
   readonly sellerRole: Locator;
 
   constructor(private readonly page: Page) {
-    // Role cards available on the marketplace landing page.
+    // Tarjetas de rol disponibles en la página inicial del marketplace.
     this.buyerRole = page.getByRole('heading', { name: 'Soy Comprador' });
     this.sellerRole = page.getByRole('heading', { name: 'Soy Vendedor' });
   }
 
   async goto() {
-    // Navigate through baseURL so QA/PROD environments are controlled from playwright.config.ts.
+    // Navega usando baseURL para controlar ambientes QA/PROD desde playwright.config.ts.
     await this.page.goto('index.html');
   }
 
   async expectLoaded() {
-    // The landing page is ready when both user roles are visible.
+    // La página inicial está lista cuando ambos roles de usuario son visibles.
     await expect(this.buyerRole).toBeVisible();
     await expect(this.sellerRole).toBeVisible();
   }
 
   async selectBuyerRole() {
-    // Buyer role starts the catalog and purchase journey.
+    // El rol comprador inicia el flujo de catálogo y compra.
     await this.buyerRole.click();
   }
 
   async selectSellerRole() {
-    // Seller role starts the product and order management journey.
+    // El rol vendedor inicia el flujo de productos y órdenes.
     await this.sellerRole.click();
   }
 }

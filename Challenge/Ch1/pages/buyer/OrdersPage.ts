@@ -4,12 +4,12 @@ export class OrdersPage {
   constructor(private readonly page: Page) {}
 
   async expectLoaded() {
-    // Successful checkout redirects the buyer to the orders history.
+    // Un checkout exitoso redirige al comprador al historial de órdenes.
     await expect(this.page.getByRole('heading', { name: /Mis .rdenes/ })).toBeVisible();
   }
 
   async expectLatestOrderForCustomer(customerName: string, address: string, productName: string) {
-    // The newest generated order is validated as a full card to avoid fragile split-text assertions.
+    // La orden generada se valida como tarjeta completa para evitar assertions frágiles por texto dividido.
     const latestOrder = this.page.locator('main > div > div').filter({ hasText: customerName }).last();
 
     await expect(latestOrder).toBeVisible();

@@ -7,7 +7,7 @@ export class SellerProductsPage {
   readonly switchToBuyerLink: Locator;
 
   constructor(private readonly page: Page) {
-    // Seller product table and navigation actions available after choosing the seller role.
+    // Tabla de productos del vendedor y acciones de navegación disponibles desde ese rol.
     this.heading = page.getByRole('heading', { name: 'Mis Productos' });
     this.publishProductLink = page.getByRole('link', { name: '+ Publicar Nuevo Producto' });
     this.receivedOrdersLink = page.getByRole('link', { name: /.rdenes Recibidas/ });
@@ -15,29 +15,29 @@ export class SellerProductsPage {
   }
 
   async expectLoaded() {
-    // The seller landing page must expose the product table and publishing action.
+    // La página del vendedor debe mostrar la tabla y la acción para publicar productos.
     await expect(this.heading).toBeVisible();
     await expect(this.publishProductLink).toBeVisible();
     await expect(this.receivedOrdersLink).toBeVisible();
   }
 
   async openPublishProductForm() {
-    // Publishing a new product starts from the products table page.
+    // La publicación de un producto inicia desde la tabla de productos del vendedor.
     await this.publishProductLink.click();
   }
 
   async expectProductInTable(productName: string) {
-    // The created product must be rendered in the seller product table after saving.
+    // El producto creado debe aparecer en la tabla después de guardar el formulario.
     await expect(this.page.getByRole('cell', { name: productName })).toBeVisible();
   }
 
   async switchToBuyerCatalog() {
-    // This supports test setup when the seller needs a fresh actionable order.
+    // Permite preparar una compra fresca cuando el vendedor necesita una orden accionable.
     await this.switchToBuyerLink.click();
   }
 
   async openReceivedOrders() {
-    // Received orders validates the seller can manage purchases for the store.
+    // Las órdenes recibidas permiten validar la gestión de pedidos del vendedor.
     await this.receivedOrdersLink.click();
   }
 }

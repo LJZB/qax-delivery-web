@@ -17,20 +17,20 @@ export class CheckoutPage {
   readonly confirmOrderButton: Locator;
 
   constructor(private readonly page: Page) {
-    // Checkout actions that move the buyer through shipping and payment.
+    // Acciones que mueven al comprador entre envío, pago y confirmación.
     this.continueToPaymentButton = page.getByRole('button', { name: 'Continuar al Pago' });
     this.confirmOrderButton = page.getByRole('button', { name: 'Confirmar Pedido' });
   }
 
   async expectShippingStep() {
-    // Step one must request shipping data before payment fields are available.
+    // El primer paso debe pedir datos de envío antes de mostrar los campos de pago.
     await expect(this.page.getByText(/1\. Env.o/)).toBeVisible();
     await expect(this.page.getByRole('heading', { name: /Informaci.n de Env.o/ })).toBeVisible();
     await expect(this.continueToPaymentButton).toBeVisible();
   }
 
   async fillShipping(data: ShippingData) {
-    // Shipping fields validate the first checkout step acceptance criteria.
+    // Los campos de envío validan el primer paso del checkout.
     await this.page.getByRole('textbox', { name: 'Nombre Completo' }).fill(data.fullName);
     await this.page.getByRole('textbox', { name: /Direcci.n/ }).fill(data.address);
     await this.page.getByRole('textbox', { name: /Tel.fono/ }).fill(data.phone);
@@ -38,12 +38,12 @@ export class CheckoutPage {
   }
 
   async continueToPayment() {
-    // Continue only after shipping data has been completed.
+    // Continúa al pago únicamente después de completar los datos de envío.
     await this.continueToPaymentButton.click();
   }
 
   async expectPaymentStep() {
-    // Step two must expose payment options and the final confirmation action.
+    // El segundo paso debe mostrar métodos de pago y la acción final de confirmación.
     await expect(this.page.getByText('2. Pago')).toBeVisible();
     await expect(this.page.getByRole('heading', { name: /M.todo de Pago/ })).toBeVisible();
     await expect(this.page.getByText(/Tarjeta de D.bito/)).toBeVisible();
@@ -52,13 +52,13 @@ export class CheckoutPage {
   }
 
   async fillCardPayment(data: CardPaymentData) {
-    // Card data completes the payment form used by this buyer scenario.
+    // Los datos de tarjeta completan el método de pago usado por este escenario.
     await this.page.getByRole('textbox', { name: /N.mero de Tarjeta/ }).fill(data.cardNumber);
     await this.page.getByRole('textbox', { name: 'Vencimiento' }).fill(data.expiration);
   }
 
   async confirmOrder() {
-    // The app shows a dialog on confirmation; dismiss it so the test can validate the orders page.
+    // La app muestra un diálogo al confirmar; se descarta para validar la página de órdenes.
     this.page.once('dialog', (dialog) => dialog.dismiss().catch(() => {}));
     await this.confirmOrderButton.click();
   }

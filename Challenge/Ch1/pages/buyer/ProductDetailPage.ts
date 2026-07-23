@@ -6,14 +6,14 @@ export class ProductDetailPage {
   readonly quantityInput: Locator;
 
   constructor(private readonly page: Page) {
-    // Detail page actions available for the selected product.
+    // Acciones disponibles en el detalle del producto seleccionado.
     this.addToCartButton = page.getByRole('button', { name: 'Agregar al Carrito' });
     this.makeOfferButton = page.getByRole('button', { name: 'Hacer Oferta' });
     this.quantityInput = page.getByRole('spinbutton', { name: 'Cantidad:' });
   }
 
   async expectLoaded(productName: string) {
-    // Product detail must expose id-based navigation and the key purchase metadata.
+    // El detalle debe exponer navegación por id y la metadata clave de compra.
     await expect(this.page).toHaveURL(/buyer-product\.html\?id=/);
     await expect(this.page.getByRole('heading', { name: productName })).toBeVisible();
     await expect(this.addToCartButton).toBeVisible();
@@ -24,9 +24,8 @@ export class ProductDetailPage {
   }
 
   async addToCart() {
-    // Add once to keep the expected cart badge deterministic.
+    // Agrega una sola unidad para mantener determinístico el badge del carrito.
     await this.addToCartButton.click();
     await expect(this.page.getByText('Producto agregado al carrito')).toBeVisible();
   }
 }
-

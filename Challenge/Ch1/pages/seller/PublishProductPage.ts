@@ -20,7 +20,7 @@ export class PublishProductPage {
   readonly publishButton: Locator;
 
   constructor(private readonly page: Page) {
-    // Product publishing form fields captured from the seller Codegen flow.
+    // Campos del formulario de publicación capturados desde el flujo de vendedor con Codegen.
     this.heading = page.getByRole('heading', { name: 'Publicar Nuevo Producto' });
     this.productNameInput = page.getByRole('textbox', { name: 'Nombre del Producto' });
     this.descriptionInput = page.getByRole('textbox', { name: /Descripci.n/ });
@@ -32,7 +32,7 @@ export class PublishProductPage {
   }
 
   async expectLoaded() {
-    // The form must allow entering all required product publication data.
+    // El formulario debe permitir ingresar todos los datos requeridos para publicar el producto.
     await expect(this.heading).toBeVisible();
     await expect(this.productNameInput).toBeVisible();
     await expect(this.descriptionInput).toBeVisible();
@@ -43,7 +43,7 @@ export class PublishProductPage {
   }
 
   async publishProduct(product: ProductData) {
-    // Fill the complete form, including the simulated image upload used by the SUT.
+    // Completa el formulario, incluida la carga simulada de imagen que exige el SUT.
     await this.productNameInput.fill(product.name);
     await this.descriptionInput.fill(product.description);
     await this.categorySelect.selectOption(product.category);

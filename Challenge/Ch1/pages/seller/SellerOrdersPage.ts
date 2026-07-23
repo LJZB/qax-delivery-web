@@ -5,18 +5,18 @@ export class SellerOrdersPage {
   readonly markAsSentButton: Locator;
 
   constructor(private readonly page: Page) {
-    // Orders table and status-changing action available to the seller.
+    // Tabla de órdenes y acción que permite cambiar el estado del pedido.
     this.heading = page.getByRole('heading', { name: /.rdenes Recibidas/ });
     this.markAsSentButton = page.getByRole('button', { name: 'Marcar como Enviado' }).first();
   }
 
   async goto() {
-    // Direct navigation keeps setup short after creating a buyer order for the seller.
+    // Navegación directa para volver a órdenes después de crear una compra como preparación.
     await this.page.goto('seller-orders.html');
   }
 
   async expectLoaded() {
-    // Table headers prove the received orders management page is rendered.
+    // Los encabezados prueban que la página de gestión de órdenes recibidas está renderizada.
     await expect(this.heading).toBeVisible();
     await expect(this.page.getByRole('columnheader', { name: 'ID' })).toBeVisible();
     await expect(this.page.getByRole('columnheader', { name: 'Comprador' })).toBeVisible();
@@ -28,24 +28,24 @@ export class SellerOrdersPage {
   }
 
   async expectOrdersWithStatus() {
-    // At least one visible status confirms that received orders include state information.
+    // Al menos un estado visible confirma que las órdenes incluyen información de seguimiento.
     await expect(this.page.getByText(/Confirmado|Enviado|Entregado/).first()).toBeVisible();
   }
 
   async expectOrderForProduct(productName: string) {
-    // The seller must see the order generated for the product published during this scenario.
+    // El vendedor debe ver la orden generada para el producto publicado en este escenario.
     await expect(this.page.getByRole('cell', { name: `${productName} x1` })).toBeVisible();
   }
 
   async markFirstPendingOrderAsSent() {
-    // The seller can move a confirmed order to the sent state from the orders table.
+    // El vendedor puede mover una orden confirmada al estado enviado desde la tabla.
     await expect(this.markAsSentButton).toBeVisible();
     this.page.once('dialog', (dialog) => dialog.dismiss().catch(() => {}));
     await this.markAsSentButton.click();
   }
 
   async expectSentStatusVisible() {
-    // The state change is complete when the table shows an Enviado status.
+    // El cambio queda validado cuando la tabla muestra el estado Enviado.
     await expect(this.page.getByText('Enviado').first()).toBeVisible();
   }
 }
