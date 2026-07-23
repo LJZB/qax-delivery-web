@@ -32,13 +32,16 @@ La aplicacion no requiere login y persiste sus datos en `localStorage`.
 Mission/
 |-- pages/
 |   |-- BasePage.ts
+|   |-- CheckoutPage.ts
 |   |-- EventsPage.ts
-|   `-- SeatsPage.ts
+|   |-- SeatsPage.ts
+|   `-- TicketsPage.ts
 |-- test-cases/
 |   `-- hu-01-explorar-eventos.md
 |-- tests/
 |   |-- hu-01-explorar-eventos.spec.ts
-|   `-- hu-02-seleccionar-asientos.spec.ts
+|   |-- hu-02-seleccionar-asientos.spec.ts
+|   `-- hu-03-checkout-pago.spec.ts
 |-- .gitignore
 |-- package.json
 |-- playwright.config.ts
@@ -68,6 +71,17 @@ La HU-02 esta implementada con Page Object Model y siete escenarios automatizado
 - limite maximo de cuatro asientos y advertencia;
 - resumen flotante con asientos, precios y total;
 - estado del boton Continuar a Pago con y sin seleccion.
+
+La HU-03 esta implementada con Page Object Model y seis escenarios automatizados:
+
+- campos obligatorios de nombre, correo y telefono;
+- activacion del iframe con el total correcto;
+- validacion de numero de tarjeta, vencimiento y CVV dentro del iframe;
+- mensaje de confirmacion para un pago exitoso;
+- generacion del ID de reserva `TKT-XXXXXXXXXX`;
+- redireccion a la pagina Mis Entradas.
+
+La automatizacion utiliza `frameLocator()` para todas las interacciones con la pasarela. El resultado aleatorio del pago se controla en los escenarios exitosos para evitar pruebas inestables.
 
 ### Reporte de defecto: el mapa puede quedar vacio por datos persistidos
 
@@ -122,6 +136,14 @@ El comportamiento esta relacionado con los datos persistidos por el navegador. L
 - La zona VIP contiene asientos con `data-zone="VIP"`, pero no presenta un rotulo visible como Platea y General.
 - Cuando no hay asientos seleccionados, el panel flotante permanece oculto, pero el boton **Continuar a Pago** esta habilitado en el DOM y no tiene inicialmente el atributo `disabled`.
 
+### Incumplimiento detectado en HU-03
+
+El formulario solicita correctamente nombre, correo y telefono, pero no incluye un boton visible para enviarlo. Presionar Enter despues de completar los campos tampoco activa la pasarela, por lo que el iframe conserva el total `$0`. Los escenarios posteriores disparan el evento `submit` como preparacion tecnica documentada para poder continuar evaluando la tarjeta y el pago.
+
+Una vez activado el iframe, sus validaciones, el mensaje de pago exitoso y la redireccion funcionan. Sin embargo, la pagina **Mis Entradas** muestra cero entradas y no renderiza una tarjeta ni un ID de reserva.
+
+Estos defectos impiden cumplir la activacion normal de la pasarela y el criterio `TKT-XXXXXXXXXX`. Las pruebas conservan las expectativas solicitadas. El resultado actual de HU-03 es **4 pruebas aprobadas y 2 fallidas**.
+
 ### Ejecucion de la HU-01
 
 ```bash
@@ -144,6 +166,18 @@ pnpm run test:hu02
 
 ```bash
 pnpm run test:hu02:headed
+```
+
+### Ejecucion de la HU-03
+
+```bash
+pnpm run test:hu03
+```
+
+### Ejecucion de la HU-03 con navegador visible
+
+```bash
+pnpm run test:hu03:headed
 ```
 
 ### Validacion de TypeScript

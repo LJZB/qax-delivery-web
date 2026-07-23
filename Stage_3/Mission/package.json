@@ -10,6 +10,8 @@
     "test:hu01:headed": "playwright test -g \"HU-01\" --headed",
     "test:hu02": "playwright test -g \"HU-02\"",
     "test:hu02:headed": "playwright test -g \"HU-02\" --headed",
+    "test:hu03": "playwright test -g \"HU-03\"",
+    "test:hu03:headed": "playwright test -g \"HU-03\" --headed",
     "typecheck": "tsc --noEmit",
     "report": "playwright show-report"
   },

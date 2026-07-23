@@ -78,6 +78,10 @@ export class SeatsPage extends BasePage {
     await this.seatById(seatId).click();
   }
 
+  async continueToCheckout(): Promise<void> {
+    await this.continueButton.click();
+  }
+
   // Bloque de preparacion de datos:
   // Crea una reserva controlada en localStorage para disponer de un asiento
   // ocupado reproducible sin depender del estado dejado por otras pruebas.
