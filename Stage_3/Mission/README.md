@@ -37,11 +37,15 @@ Mission/
 |   |-- SeatsPage.ts
 |   `-- TicketsPage.ts
 |-- test-cases/
-|   `-- hu-01-explorar-eventos.md
+|   |-- hu-01-explorar-eventos.md
+|   |-- hu-02-seleccionar-asientos.md
+|   |-- hu-03-checkout-pago.md
+|   `-- hu-04-mis-tickets.md
 |-- tests/
 |   |-- hu-01-explorar-eventos.spec.ts
 |   |-- hu-02-seleccionar-asientos.spec.ts
-|   `-- hu-03-checkout-pago.spec.ts
+|   |-- hu-03-checkout-pago.spec.ts
+|   `-- hu-04-mis-tickets.spec.ts
 |-- .gitignore
 |-- package.json
 |-- playwright.config.ts
@@ -82,6 +86,30 @@ La HU-03 esta implementada con Page Object Model y seis escenarios automatizados
 - redireccion a la pagina Mis Entradas.
 
 La automatizacion utiliza `frameLocator()` para todas las interacciones con la pasarela. El resultado aleatorio del pago se controla en los escenarios exitosos para evitar pruebas inestables.
+
+La HU-04 esta implementada con Page Object Model y cinco escenarios automatizados:
+
+- tarjetas correspondientes a los tickets comprados;
+- nombre del evento, ID y fecha de compra;
+- codigo QR renderizado mediante SVG;
+- resumen de entradas, eventos y gasto total;
+- estado vacio y regreso a la pagina de eventos.
+
+HU-04 prepara reservas controladas en `localStorage` para validar la pagina de tickets de forma independiente al defecto de persistencia encontrado en HU-03.
+
+### Bloqueo detectado en HU-04
+
+Los cinco escenarios de HU-04 fallan porque el JavaScript de `tickets.html` no llega a ejecutarse. La funcion `mockDownload()` contiene saltos de linea dentro de una cadena delimitada con comillas simples, lo que provoca un error de sintaxis al interpretar el script.
+
+Como consecuencia:
+
+- las reservas guardadas correctamente en `localStorage` no se convierten en tarjetas;
+- los datos del evento, ID y fecha no se muestran;
+- los codigos QR SVG no se generan;
+- las tarjetas de resumen conservan sus valores iniciales en cero;
+- el estado vacio permanece oculto cuando no existen reservas.
+
+La preparacion automatizada verifica antes de navegar que las reservas fueron almacenadas. Por tanto, los fallos se conservan como evidencia del bloqueo del SUT. El resultado actual de HU-04 es **0 pruebas aprobadas y 5 fallidas**.
 
 ### Reporte de defecto: el mapa puede quedar vacio por datos persistidos
 
@@ -178,6 +206,18 @@ pnpm run test:hu03
 
 ```bash
 pnpm run test:hu03:headed
+```
+
+### Ejecucion de la HU-04
+
+```bash
+pnpm run test:hu04
+```
+
+### Ejecucion de la HU-04 con navegador visible
+
+```bash
+pnpm run test:hu04:headed
 ```
 
 ### Validacion de TypeScript
