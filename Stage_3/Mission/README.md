@@ -14,11 +14,18 @@ La automatizacion cubrira el flujo end-to-end completo:
 - pago mediante iframe;
 - generacion y consulta de tickets.
 
-## Alcance y estado actual
+## Alcance y estado
 
-La Mission se encuentra **en desarrollo**. Actualmente estan implementadas la **HU-01: Explorar eventos** y la **HU-02: Seleccionar asientos**. Las siguientes historias se incorporaran progresivamente hasta completar todo el flujo.
+La **Mission del Stage 3 esta completa**. Se diseñaron y automatizaron las cuatro historias de usuario de QAXTickets:
 
-La solucion final utilizara Playwright con TypeScript, Page Object Model, clases independientes para cada pagina, anotaciones, validaciones visuales y de estado, manejo del iframe de pago, evidencias automaticas y documentacion de ejecucion.
+- **HU-01:** Explorar eventos.
+- **HU-02:** Seleccionar asientos.
+- **HU-03:** Checkout y pago con iframe.
+- **HU-04:** Mis tickets.
+
+La solucion cubre el flujo end-to-end completo desde el filtro de eventos hasta la consulta de tickets. Utiliza Playwright con TypeScript, Page Object Model, clases independientes para cada pagina, anotaciones, validaciones visuales y de estado, manejo del iframe de pago, casos Gherkin, evidencias automaticas y documentacion de ejecucion.
+
+Los escenarios que permanecen fallando se conservan como evidencia de incumplimientos del sistema bajo prueba y estan documentados en las secciones de hallazgos. Estos defectos no representan trabajo pendiente de automatizacion.
 
 ## Sitio de practica
 
@@ -31,7 +38,10 @@ La aplicacion no requiere login y persiste sus datos en `localStorage`.
 ```text
 Mission/
 |-- evidencias/
-|   `-- hu-03-pago-iframe-exitoso.webm
+|   |-- hu-01-explorar-eventos.webm
+|   |-- hu-02-seleccionar-asientos.webm
+|   |-- hu-03-checkout-pago.webm
+|   `-- hu-04-mis-tickets.webm
 |-- pages/
 |   |-- BasePage.ts
 |   |-- CheckoutPage.ts
@@ -77,16 +87,20 @@ pnpm install
 pnpm exec playwright install chromium
 ```
 
-## Video
+## Videos de ejecucion
 
 La grabacion esta configurada con `video: 'on'` en `playwright.config.ts`.
 
-La evidencia versionada corresponde al escenario exitoso de pago mediante iframe:
+Se conserva una evidencia representativa por cada historia de usuario:
 
-[Ver video de pago exitoso](evidencias/hu-03-pago-iframe-exitoso.webm)
+- [HU-01 - Explorar eventos](evidencias/hu-01-explorar-eventos.webm)
+- [HU-02 - Seleccionar asientos](evidencias/hu-02-seleccionar-asientos.webm)
+- [HU-03 - Checkout y pago](evidencias/hu-03-checkout-pago.webm)
+- [HU-04 - Mis tickets](evidencias/hu-04-mis-tickets.webm)
 
-El video muestra la seleccion previa, el checkout, la interaccion con la
-pasarela embebida y el mensaje de confirmacion del pago.
+Los videos de HU-01, HU-02 y HU-03 corresponden a escenarios aprobados. El
+video de HU-04 conserva la ejecucion que evidencia el bloqueo de JavaScript
+documentado para la pagina Mis Entradas.
 
 ## Historias implementadas
 
@@ -256,4 +270,4 @@ pnpm run test:hu04:headed
 pnpm run typecheck
 ```
 
-El README se actualizara a medida que se implementen las siguientes historias de usuario. La Mission se considerara terminada cuando todo el flujo end-to-end y sus criterios de aceptacion esten automatizados y verificados.
+La Mission queda terminada con las cuatro historias de usuario, el flujo end-to-end automatizado, los casos Gherkin, la evidencia en video y los defectos del SUT documentados.
