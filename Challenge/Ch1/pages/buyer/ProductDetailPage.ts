@@ -15,7 +15,7 @@ export class ProductDetailPage {
   async expectLoaded(productName: string) {
     // Product detail must expose id-based navigation and the key purchase metadata.
     await expect(this.page).toHaveURL(/buyer-product\.html\?id=/);
-    await expect(this.page.getByText(productName)).toBeVisible();
+    await expect(this.page.getByRole('heading', { name: productName })).toBeVisible();
     await expect(this.addToCartButton).toBeVisible();
     await expect(this.makeOfferButton).toBeVisible();
     await expect(this.quantityInput).toBeVisible();
@@ -29,3 +29,4 @@ export class ProductDetailPage {
     await expect(this.page.getByText('Producto agregado al carrito')).toBeVisible();
   }
 }
+

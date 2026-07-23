@@ -1,0 +1,103 @@
+﻿import { test } from '@playwright/test';
+import { fileURLToPath } from 'node:url';
+import { HomePage } from '../pages/HomePage.js';
+import { BuyerCatalogPage } from '../pages/buyer/BuyerCatalogPage.js';
+import { ProductDetailPage } from '../pages/buyer/ProductDetailPage.js';
+import { CartPage } from '../pages/buyer/CartPage.js';
+import { CheckoutPage } from '../pages/buyer/CheckoutPage.js';
+import { SellerProductsPage } from '../pages/seller/SellerProductsPage.js';
+import { PublishProductPage } from '../pages/seller/PublishProductPage.js';
+import { SellerOrdersPage } from '../pages/seller/SellerOrdersPage.js';
+
+test.describe('HU-02 Gestion de productos como vendedor', () => {
+  test('vendedor publica un producto y marca una orden como enviada', async ({ page }) => {
+    // Page Objects isolate locators and business actions for the seller workflow.
+    const homePage = new HomePage(page);
+    const catalogPage = new BuyerCatalogPage(page);
+    const productDetailPage = new ProductDetailPage(page);
+    const cartPage = new CartPage(page);
+    const checkoutPage = new CheckoutPage(page);
+    const sellerProductsPage = new SellerProductsPage(page);
+    const publishProductPage = new PublishProductPage(page);
+    const sellerOrdersPage = new SellerOrdersPage(page);
+
+    // Product data comes from the Codegen exploration, with a local fixture replacing the temp upload file.
+    const product = {
+      name: 'Nintendo Switch OLED',
+      description: 'Nintendo Switch OLED con motivo de Tears of the Kingdom',
+      category: 'Juguetes y Juegos',
+      price: '1800000',
+      stock: '5',
+      imagePath: fileURLToPath(new URL('../fixtures/product-image.png', import.meta.url)),
+    };
+
+    // Buyer data creates a fresh order because the seeded seller orders are already delivered.
+    const buyerShippingData = {
+      fullName: 'Luis QA',
+      address: 'Calle Falsa 123',
+      phone: '4441414141',
+      city: 'Cali',
+    };
+
+    await test.step('Seleccionar el rol vendedor', async () => {
+      // Acceptance criterion: selecting seller navigates to the products table.
+      await homePage.goto();
+      await homePage.expectLoaded();
+      await homePage.selectSellerRole();
+      await sellerProductsPage.expectLoaded();
+    });
+
+    await test.step('Publicar un nuevo producto', async () => {
+      // Acceptance criterion: the form allows entering name, description, category and price.
+      await sellerProductsPage.openPublishProductForm();
+      await publishProductPage.expectLoaded();
+      await publishProductPage.publishProduct(product);
+    });
+
+    await test.step('Validar que el producto aparece en la tabla del vendedor', async () => {
+      // Acceptance criterion: saving the product returns it to the seller products table.
+      await sellerProductsPage.expectLoaded();
+      await sellerProductsPage.expectProductInTable(product.name);
+    });
+
+    await test.step('Crear una orden pendiente para el producto publicado', async () => {
+      // Setup: buy the new product so the seller has an order that can be marked as sent.
+      await sellerProductsPage.switchToBuyerCatalog();
+      await homePage.expectLoaded();
+      await homePage.selectBuyerRole();
+      await catalogPage.expectLoaded();
+      await catalogPage.search(product.name);
+      await catalogPage.expectProductVisible(product.name);
+      await catalogPage.openProduct(product.name);
+      await productDetailPage.expectLoaded(product.name);
+      await productDetailPage.addToCart();
+      await catalogPage.expectCartCount(1);
+      await catalogPage.openCart();
+      await cartPage.expectLoaded();
+      await cartPage.goToCheckout();
+      await checkoutPage.expectShippingStep();
+      await checkoutPage.fillShipping(buyerShippingData);
+      await checkoutPage.continueToPayment();
+      await checkoutPage.expectPaymentStep();
+      await checkoutPage.fillCardPayment({
+        cardNumber: '1111111111111111',
+        expiration: '12/30',
+      });
+      await checkoutPage.confirmOrder();
+    });
+
+    await test.step('Validar ordenes recibidas con estado', async () => {
+      // Acceptance criterion: received orders show order data and current status.
+      await sellerOrdersPage.goto();
+      await sellerOrdersPage.expectLoaded();
+      await sellerOrdersPage.expectOrdersWithStatus();
+      await sellerOrdersPage.expectOrderForProduct(product.name);
+    });
+
+    await test.step('Marcar una orden como enviada', async () => {
+      // Acceptance criterion: clicking Mark as Sent changes an order status to Enviado.
+      await sellerOrdersPage.markFirstPendingOrderAsSent();
+      await sellerOrdersPage.expectSentStatusVisible();
+    });
+  });
+});

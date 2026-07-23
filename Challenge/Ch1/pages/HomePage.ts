@@ -25,4 +25,9 @@ export class HomePage {
     // Buyer role starts the catalog and purchase journey.
     await this.buyerRole.click();
   }
+
+  async selectSellerRole() {
+    // Seller role starts the product and order management journey.
+    await this.sellerRole.click();
+  }
 }
