@@ -115,14 +115,17 @@ Partes del comando:
 Ejecutar con navegador visible:
 
 ```bash
-pnpm run test:headed
+pnpm exec playwright test --headed --workers=1
 ```
 
 Partes del comando:
 
-- `pnpm run`: ejecuta un script de `package.json`.
-- `test:headed`: corre Playwright con `--headed` para ver el navegador.
+- `pnpm exec`: ejecuta el binario local de Playwright.
+- `playwright test`: corre las pruebas automatizadas.
+- `--headed`: abre el navegador visible.
+- `--workers=1`: ejecuta los tests en serie para facilitar la revisión visual y evitar interferencias de estado compartido del SUT durante la ejecución headed.
 
+Nota: `pnpm run test:headed` también abre el navegador, pero ejecuta con la configuración normal de workers. Para revisión manual del mentor se recomienda el comando anterior con `--workers=1`.
 Ejecutar con UI Mode:
 
 ```bash
@@ -310,3 +313,5 @@ Resultado esperado:
 ```text
 2 passed
 ```
+
+
