@@ -1,0 +1,32 @@
+{
+  "name": "stage-4-challenge-1-qaxmarket",
+  "version": "1.0.0",
+  "description": "Stage 4 Challenge 1 - QAXmarket buyer and seller flows with Playwright",
+  "scripts": {
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:record": "playwright codegen https://qaxpert.com/lab/sites/stage-4/marketplace/index.html",
+    "test:report": "playwright show-report",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devEngines": {
+    "packageManager": {
+      "name": "pnpm",
+      "version": "^11.16.0",
+      "onFail": "download"
+    }
+  },
+  "type": "module",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.1",
+    "dotenv": "^17.4.2",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
+  }
+}
