@@ -13,9 +13,9 @@ https://qaxpert.com/lab/sites/stage-4/marketplace/index.html
 Historias cubiertas:
 
 - HU-01 Compra de producto como comprador.
-- HU-02 Gestion de productos como vendedor.
+- HU-02 Gestión de productos como vendedor.
 
-La solucion usa Playwright Test, TypeScript, variables de entorno, Page Object Model, UI Mode y Codegen como apoyo para descubrir los flujos principales.
+La solución usa Playwright Test, TypeScript, variables de entorno, Page Object Model, UI Mode y Codegen como apoyo para descubrir los flujos principales.
 
 ## Estructura
 
@@ -45,7 +45,7 @@ Challenge/Ch1
 └── tsconfig.json
 ```
 
-## Instalacion
+## Instalación
 
 Desde esta carpeta:
 
@@ -97,9 +97,9 @@ Ambientes configurados:
 - `qa`: `https://qaxpert.com/lab/sites/stage-4/marketplace/`
 - `prod`: `https://qaxpert.com/lab/sites/stage-4/marketplace/`
 
-Nota: `.env` esta ignorado por Git para evitar subir configuracion local.
+Nota: `.env` está ignorado por Git para evitar subir configuración local.
 
-## Ejecucion
+## Ejecución
 
 Ejecutar toda la suite en modo headless:
 
@@ -177,8 +177,8 @@ Partes del comando:
 
 - `pnpm exec`: ejecuta el binario local de Playwright.
 - `playwright test`: corre pruebas automatizadas.
-- `tests/buyer-purchase.spec.ts`: limita la ejecucion a HU-01.
-- `--project=chromium`: usa el proyecto Chromium definido en la configuracion.
+- `tests/buyer-purchase.spec.ts`: limita la ejecución a HU-01.
+- `--project=chromium`: usa el proyecto Chromium definido en la configuración.
 
 Ejecutar solo HU-02:
 
@@ -190,8 +190,8 @@ Partes del comando:
 
 - `pnpm exec`: ejecuta el binario local de Playwright.
 - `playwright test`: corre pruebas automatizadas.
-- `tests/seller-management.spec.ts`: limita la ejecucion a HU-02.
-- `--project=chromium`: usa el proyecto Chromium definido en la configuracion.
+- `tests/seller-management.spec.ts`: limita la ejecución a HU-02.
+- `--project=chromium`: usa el proyecto Chromium definido en la configuración.
 
 Ejecutar en QA:
 
@@ -217,7 +217,7 @@ Partes del comando:
 
 ## Uso de Codegen
 
-Codegen se uso como punto de partida para descubrir los flujos principales, nombres accesibles, campos y botones del SUT.
+Codegen se usó como punto de partida para descubrir los flujos principales, nombres accesibles, campos y botones del SUT.
 
 Comando usado:
 
@@ -230,7 +230,7 @@ Partes del comando:
 - `pnpm run`: ejecuta un script del proyecto.
 - `test:record`: abre `playwright codegen` contra QAXmarket.
 
-El codigo generado no se dejo como prueba final porque contenia pasos exploratorios, selectores fragiles, texto con problemas de encoding y dependencias a archivos temporales. La version final se refactorizo a POM.
+El código generado no se dejó como prueba final porque contenía pasos exploratorios, selectores frágiles, texto con problemas de encoding y dependencias a archivos temporales. La versión final se refactorizó a POM.
 
 ## Uso de UI Mode
 
@@ -258,18 +258,18 @@ tests/buyer-purchase.spec.ts
 
 Cubre:
 
-- Seleccion de rol comprador.
-- Navegacion al catalogo.
-- Busqueda de producto.
+- Selección de rol comprador.
+- Navegación al catálogo.
+- Búsqueda de producto.
 - Apertura de detalle con URL `buyer-product.html?id=`.
 - Agregado al carrito.
-- Validacion del badge del carrito.
-- Validacion del carrito con producto, precio, cantidad y subtotal.
-- Checkout en dos pasos: envio y pago.
-- Confirmacion del pedido.
-- Validacion de orden creada con estado confirmado y detalle del producto.
+- Validación del badge del carrito.
+- Validación del carrito con producto, precio, cantidad y subtotal.
+- Checkout en dos pasos: envío y pago.
+- Confirmación del pedido.
+- Validación de orden creada con estado confirmado y detalle del producto.
 
-## HU-02 Gestion de productos como vendedor
+## HU-02 Gestión de productos como vendedor
 
 Archivo:
 
@@ -279,24 +279,24 @@ tests/seller-management.spec.ts
 
 Cubre:
 
-- Seleccion de rol vendedor.
-- Navegacion a la tabla `Mis Productos`.
-- Publicacion de producto con nombre, descripcion, categoria, precio, stock e imagen simulada.
-- Validacion del producto creado en la tabla del vendedor.
-- Creacion de una orden comprando el producto publicado.
-- Validacion de ordenes recibidas con estado.
+- Selección de rol vendedor.
+- Navegación a la tabla `Mis Productos`.
+- Publicación de producto con nombre, descripción, categoría, precio, stock e imagen simulada.
+- Validación del producto creado en la tabla del vendedor.
+- Creación de una orden comprando el producto publicado.
+- Validación de órdenes recibidas con estado.
 - Cambio de estado usando `Marcar como Enviado`.
-- Validacion de estado `Enviado`.
+- Validación de estado `Enviado`.
 
 ## Problemas encontrados
 
-- `baseURL` necesitaba terminar en `/marketplace/`. Sin el slash final, las rutas relativas podian resolver fuera del sitio esperado y caer en una pagina 404.
-- El texto pegado desde Codegen presento mojibake en caracteres como tildes y emojis. Por eso se evitaron assertions dependientes de esos textos corruptos.
-- Algunas assertions generadas por Codegen eran fragiles, por ejemplo `nth()`, textos largos concatenados y clicks sobre emojis.
-- En el estado inicial del SUT, las ordenes del vendedor aparecian como `Entregado`, por lo que no existia boton `Marcar como Enviado`. Para validar ese criterio, HU-02 publica un producto y crea una compra real como preparacion del escenario.
-- El flujo de publicacion requiere una imagen. Se agrego `fixtures/product-image.png` para reemplazar el archivo temporal usado durante Codegen.
+- `baseURL` necesitaba terminar en `/marketplace/`. Sin el slash final, las rutas relativas podían resolver fuera del sitio esperado y caer en una página 404.
+- El texto pegado desde Codegen presentó mojibake en caracteres como tildes y emojis. Por eso se evitaron assertions dependientes de esos textos corruptos.
+- Algunas assertions generadas por Codegen eran frágiles, por ejemplo `nth()`, textos largos concatenados y clicks sobre emojis.
+- En el estado inicial del SUT, las órdenes del vendedor aparecían como `Entregado`, por lo que no existía botón `Marcar como Enviado`. Para validar ese criterio, HU-02 publica un producto y crea una compra real como preparación del escenario.
+- El flujo de publicación requiere una imagen. Se agregó `fixtures/product-image.png` para reemplazar el archivo temporal usado durante Codegen.
 
-## Verificacion realizada
+## Verificación realizada
 
 Comandos ejecutados durante el desarrollo:
 
