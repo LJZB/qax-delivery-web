@@ -30,6 +30,8 @@ La aplicacion no requiere login y persiste sus datos en `localStorage`.
 
 ```text
 Mission/
+|-- evidencias/
+|   `-- hu-03-pago-iframe-exitoso.webm
 |-- pages/
 |   |-- BasePage.ts
 |   |-- CheckoutPage.ts
@@ -54,9 +56,37 @@ Mission/
 `-- tsconfig.json
 ```
 
+## Instalacion
+
+### Prerrequisitos
+
+- Node.js 18 o superior.
+- pnpm disponible en el sistema.
+
+### Instalar dependencias
+
+Desde `Stage_3/Mission`:
+
+```bash
+pnpm install
+```
+
+### Instalar Chromium para Playwright
+
+```bash
+pnpm exec playwright install chromium
+```
+
 ## Video
 
 La grabacion esta configurada con `video: 'on'` en `playwright.config.ts`.
+
+La evidencia versionada corresponde al escenario exitoso de pago mediante iframe:
+
+[Ver video de pago exitoso](evidencias/hu-03-pago-iframe-exitoso.webm)
+
+El video muestra la seleccion previa, el checkout, la interaccion con la
+pasarela embebida y el mensaje de confirmacion del pago.
 
 ## Historias implementadas
 
