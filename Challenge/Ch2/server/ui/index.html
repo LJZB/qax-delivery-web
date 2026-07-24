@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QAXadmin — Iniciar Sesión</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="login-container">
+  <div class="login-box">
+    <h1>QAXadmin</h1>
+    <p>Panel de Administración — Stage 4</p>
+    <div class="form-group"><label for="loginEmail">Email</label><input type="email" id="loginEmail" placeholder="admin@qaxpert.com" autocomplete="email"></div>
+    <div class="form-group"><label for="loginPass">Contraseña</label><input type="password" id="loginPass" placeholder="Contraseña" autocomplete="current-password"></div>
+    <button class="btn btn-primary" style="width:100%; padding:12px; font-size:15px;" onclick="doLogin()">Iniciar Sesión</button>
+    <p class="login-error" id="loginError">Credenciales incorrectas</p>
+    <p style="text-align:center; margin-top:16px; font-size:12px; color:var(--text-light);">Demo: admin@qaxpert.com / admin123</p>
+  </div>
+</div>
+<script src="js/app.js"></script>
+<script>
+if (isLoggedIn()) window.location.href = 'dashboard.html';
+
+function doLogin() {
+  var email = document.getElementById('loginEmail').value.trim();
+  var pass = document.getElementById('loginPass').value;
+  if (email === 'admin@qaxpert.com' && pass === 'admin123') {
+    sessionStorage.setItem('qaxadmin_logged', 'true');
+    window.location.href = 'dashboard.html';
+  } else {
+    document.getElementById('loginError').style.display = 'block';
+  }
+}
+document.getElementById('loginPass').addEventListener('keydown', function(e) { if (e.key === 'Enter') doLogin(); });
+</script>
+</body>
+</html>

@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Productos — QAXadmin</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">QAX<span>admin</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="users.html"><span class="nav-icon">👥</span> Usuarios</a>
+      <a href="products.html" class="active"><span class="nav-icon">📦</span> Productos</a>
+      <a href="orders.html"><span class="nav-icon">📋</span> Órdenes</a>
+      <a href="reports.html"><span class="nav-icon">📈</span> Reportes</a>
+      <a href="index.html" onclick="sessionStorage.removeItem('qaxadmin_logged')" style="color:var(--red);"><span class="nav-icon">🚪</span> Cerrar Sesión</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="content-header"><h1>Productos</h1><p>Gestión de productos del marketplace</p></div>
+    <div class="card">
+      <div class="toolbar">
+        <input type="text" id="searchProd" placeholder="Buscar por nombre o categoría..." oninput="renderProducts()">
+        <button class="btn btn-primary" onclick="openProductModal()">+ Nuevo Producto</button>
+      </div>
+      <table class="data-table">
+        <thead><tr>
+          <th onclick="sortProducts('id')">ID ↕</th>
+          <th onclick="sortProducts('nombre')">Nombre ↕</th>
+          <th onclick="sortProducts('categoria')">Categoría ↕</th>
+          <th onclick="sortProducts('precio')">Precio ↕</th>
+          <th onclick="sortProducts('stock')">Stock ↕</th>
+          <th>Acciones</th>
+        </tr></thead>
+        <tbody id="productsTableBody"></tbody>
+      </table>
+      <div class="pagination" id="productsPagination"></div>
+    </div>
+  </main>
+</div>
+
+<!-- Product Modal -->
+<div class="modal-overlay" id="productModal" style="display:none;">
+  <div class="modal">
+    <h3 id="productModalTitle">Nuevo Producto</h3>
+    <input type="hidden" id="editProductId">
+    <div class="form-group"><label>Nombre</label><input type="text" id="prodNombre" placeholder="Nombre del producto"></div>
+    <div class="form-group"><label>Categoría</label><select id="prodCategoria"></select></div>
+    <div class="form-group"><label>Precio (COP)</label><input type="number" id="prodPrecio" placeholder="0" min="0"></div>
+    <div class="form-group"><label>Stock</label><input type="number" id="prodStock" placeholder="0" min="0"></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeProductModal()">Cancelar</button>
+      <button class="btn btn-primary" onclick="saveProduct()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+if (!isLoggedIn()) window.location.href = 'index.html';
+
+var products = getAdminData('qaxadmin_products');
+var prodSortKey = 'id';
+var prodSortDir = 1;
+var prodPage = 1;
+var perPage = 10;
+
+(function init() {
+  var sel = document.getElementById('prodCategoria');
+  categorias.forEach(function(c) {
+    var opt = document.createElement('option'); opt.value = c; opt.textContent = c; sel.appendChild(opt);
+  });
+})();
+
+function sortProducts(key) {
+  if (prodSortKey === key) prodSortDir *= -1;
+  else { prodSortKey = key; prodSortDir = 1; }
+  renderProducts();
+}
+function renderProducts() {
+  var search = (document.getElementById('searchProd').value || '').toLowerCase();
+  var filtered = products.filter(function(p) {
+    return !search || p.nombre.toLowerCase().includes(search) || p.categoria.toLowerCase().includes(search);
+  });
+  filtered.sort(function(a, b) {
+    var av = a[prodSortKey], bv = b[prodSortKey];
+    if (typeof av === 'string') av = av.toLowerCase();
+    if (typeof bv === 'string') bv = bv.toLowerCase();
+    if (av < bv) return -1 * prodSortDir;
+    if (av > bv) return 1 * prodSortDir;
+    return 0;
+  });
+  var totalPages = Math.ceil(filtered.length / perPage);
+  if (prodPage > totalPages) prodPage = totalPages || 1;
+  var pageProds = filtered.slice((prodPage - 1) * perPage, prodPage * perPage);
+
+  document.getElementById('productsTableBody').innerHTML = pageProds.map(function(p) {
+    return '<tr>' +
+      '<td>' + p.id + '</td>' +
+      '<td>' + p.nombre + '</td>' +
+      '<td>' + p.categoria + '</td>' +
+      '<td>' + formatCOP(p.precio) + '</td>' +
+      '<td>' + p.stock + '</td>' +
+      '<td><button class="btn btn-outline btn-sm" onclick="editProduct(\'' + p.id + '\')">Editar</button> <button class="btn btn-danger btn-sm" onclick="deleteProduct(\'' + p.id + '\')">Eliminar</button></td>' +
+      '</tr>';
+  }).join('');
+
+  var pagHTML = '<button ' + (prodPage > 1 ? 'onclick="prodPage=1;renderProducts()"' : 'disabled') + '>«</button>' +
+    '<button ' + (prodPage > 1 ? 'onclick="prodPage--;renderProducts()"' : 'disabled') + '>‹</button>';
+  for (var i = 1; i <= totalPages; i++) {
+    pagHTML += '<button class="' + (i === prodPage ? 'active' : '') + '" onclick="prodPage=' + i + ';renderProducts()">' + i + '</button>';
+  }
+  pagHTML += '<button ' + (prodPage < totalPages ? 'onclick="prodPage++;renderProducts()"' : 'disabled') + '>›</button>' +
+    '<button ' + (prodPage < totalPages ? 'onclick="prodPage=' + totalPages + ';renderProducts()"' : 'disabled') + '>»</button>';
+  document.getElementById('productsPagination').innerHTML = pagHTML;
+}
+
+function openProductModal(editId) {
+  var modal = document.getElementById('productModal');
+  if (editId) {
+    var p = products.find(function(x) { return x.id === editId; });
+    if (!p) return;
+    document.getElementById('productModalTitle').textContent = 'Editar Producto';
+    document.getElementById('editProductId').value = p.id;
+    document.getElementById('prodNombre').value = p.nombre;
+    document.getElementById('prodCategoria').value = p.categoria;
+    document.getElementById('prodPrecio').value = p.precio;
+    document.getElementById('prodStock').value = p.stock;
+  } else {
+    document.getElementById('productModalTitle').textContent = 'Nuevo Producto';
+    document.getElementById('editProductId').value = '';
+    document.getElementById('prodNombre').value = '';
+    document.getElementById('prodCategoria').value = categorias[0];
+    document.getElementById('prodPrecio').value = '';
+    document.getElementById('prodStock').value = '';
+  }
+  modal.style.display = 'flex';
+}
+function closeProductModal() { document.getElementById('productModal').style.display = 'none'; }
+function editProduct(id) { openProductModal(id); }
+
+function saveProduct() {
+  var editId = document.getElementById('editProductId').value;
+  var nombre = document.getElementById('prodNombre').value.trim();
+  var categoria = document.getElementById('prodCategoria').value;
+  var precio = parseInt(document.getElementById('prodPrecio').value) || 0;
+  var stock = parseInt(document.getElementById('prodStock').value) || 0;
+  if (!nombre || !precio) { alert('Nombre y precio son requeridos'); return; }
+  if (editId) {
+    var idx = products.findIndex(function(p) { return p.id === editId; });
+    if (idx >= 0) { products[idx].nombre = nombre; products[idx].categoria = categoria; products[idx].precio = precio; products[idx].stock = stock; }
+  } else {
+    products.push({ id: 'ap' + (products.length + 1), nombre: nombre, categoria: categoria, precio: precio, stock: stock });
+  }
+  setAdminData('qaxadmin_products', products);
+  closeProductModal();
+  renderProducts();
+}
+
+function deleteProduct(id) {
+  if (!confirm('¿Eliminar este producto?')) return;
+  products = products.filter(function(p) { return p.id !== id; });
+  setAdminData('qaxadmin_products', products);
+  renderProducts();
+}
+
+renderProducts();
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — QAXadmin</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">QAX<span>admin</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html" class="active"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="users.html"><span class="nav-icon">👥</span> Usuarios</a>
+      <a href="products.html"><span class="nav-icon">📦</span> Productos</a>
+      <a href="orders.html"><span class="nav-icon">📋</span> Órdenes</a>
+      <a href="reports.html"><span class="nav-icon">📈</span> Reportes</a>
+      <a href="index.html" onclick="sessionStorage.removeItem('qaxadmin_logged')" style="color:var(--red);"><span class="nav-icon">🚪</span> Cerrar Sesión</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="content-header"><h1>Dashboard</h1><p>Resumen general del sistema</p></div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="kpi-label">Total Usuarios</div><div class="kpi-value kpi-blue">1,234</div><div class="kpi-change kpi-green">↑ 12% vs mes anterior</div></div>
+      <div class="kpi-card"><div class="kpi-label">Productos Activos</div><div class="kpi-value kpi-green">567</div><div class="kpi-change kpi-green">↑ 8% vs mes anterior</div></div>
+      <div class="kpi-card"><div class="kpi-label">Órdenes Hoy</div><div class="kpi-value" style="color:var(--yellow);">89</div><div class="kpi-change" style="color:var(--red);">↓ 3% vs ayer</div></div>
+      <div class="kpi-card"><div class="kpi-label">Ingresos COP</div><div class="kpi-value kpi-blue">45.2M</div><div class="kpi-change kpi-green">↑ 15% vs mes anterior</div></div>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-card">
+        <h3>Ventas por Mes (COP)</h3>
+        <div class="bar-chart" id="barChart"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Órdenes por Estado</h3>
+        <div id="miniStats" style="display:flex; flex-wrap:wrap; gap:16px; justify-content:center; padding:20px 0;"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+if (!isLoggedIn()) window.location.href = 'index.html';
+
+var monthlySales = [
+  { month: 'Ene', value: 32.5 },
+  { month: 'Feb', value: 28.1 },
+  { month: 'Mar', value: 35.8 },
+  { month: 'Abr', value: 40.2 },
+  { month: 'May', value: 45.2 },
+  { month: 'Jun', value: 42.0 },
+  { month: 'Jul', value: 48.5 },
+  { month: 'Ago', value: 51.3 },
+  { month: 'Sep', value: 46.7 },
+  { month: 'Oct', value: 52.1 },
+  { month: 'Nov', value: 58.4 },
+  { month: 'Dic', value: 62.8 }
+];
+
+var maxVal = Math.max.apply(null, monthlySales.map(function(m) { return m.value; }));
+document.getElementById('barChart').innerHTML = monthlySales.map(function(m) {
+  var height = (m.value / maxVal * 100).toFixed(0);
+  return '<div class="bar-item"><div class="bar-value">' + m.value + 'M</div><div class="bar-fill" style="height:' + height + '%;"></div><div class="bar-label">' + m.month + '</div></div>';
+}).join('');
+
+var orders = getAdminData('qaxadmin_orders');
+var statusCounts = {};
+orders.forEach(function(o) { statusCounts[o.estado] = (statusCounts[o.estado] || 0) + 1; });
+var statusColors = { 'Pendiente': '#f59e0b', 'Procesando': '#3b82f6', 'Enviado': '#8b5cf6', 'Entregado': '#10b981', 'Cancelado': '#ef4444' };
+document.getElementById('miniStats').innerHTML = Object.keys(statusCounts).map(function(s) {
+  return '<div style="text-align:center; padding:10px; background:var(--content-bg); border-radius:8px;"><div style="font-size:24px; font-weight:700; color:' + statusColors[s] + ';">' + statusCounts[s] + '</div><div style="font-size:12px; color:var(--text-light);">' + s + '</div></div>';
+}).join('');
+</script>
+</body>
+</html>

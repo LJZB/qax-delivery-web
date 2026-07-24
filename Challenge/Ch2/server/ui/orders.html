@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Órdenes — QAXadmin</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">QAX<span>admin</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="users.html"><span class="nav-icon">👥</span> Usuarios</a>
+      <a href="products.html"><span class="nav-icon">📦</span> Productos</a>
+      <a href="orders.html" class="active"><span class="nav-icon">📋</span> Órdenes</a>
+      <a href="reports.html"><span class="nav-icon">📈</span> Reportes</a>
+      <a href="index.html" onclick="sessionStorage.removeItem('qaxadmin_logged')" style="color:var(--red);"><span class="nav-icon">🚪</span> Cerrar Sesión</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="content-header"><h1>Órdenes</h1><p>Gestión de órdenes del sistema</p></div>
+    <div class="card">
+      <div class="toolbar">
+        <input type="text" id="searchOrder" placeholder="Buscar por cliente o producto..." oninput="renderOrders()">
+        <select id="filterStatus" onchange="renderOrders()">
+          <option value="">Todos los estados</option>
+          <option>Pendiente</option><option>Procesando</option><option>Enviado</option><option>Entregado</option><option>Cancelado</option>
+        </select>
+      </div>
+      <table class="data-table">
+        <thead><tr>
+          <th>ID</th><th>Cliente</th><th>Producto</th><th>Total</th><th>Estado</th><th>Fecha</th>
+        </tr></thead>
+        <tbody id="ordersTableBody"></tbody>
+      </table>
+      <div class="pagination" id="ordersPagination"></div>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+if (!isLoggedIn()) window.location.href = 'index.html';
+
+var orders = getAdminData('qaxadmin_orders');
+var orderPage = 1;
+var perPage = 10;
+
+function renderOrders() {
+  var search = (document.getElementById('searchOrder').value || '').toLowerCase();
+  var statusFilter = document.getElementById('filterStatus').value;
+  var filtered = orders.filter(function(o) {
+    var matchSearch = !search || o.cliente.toLowerCase().includes(search) || o.producto.toLowerCase().includes(search);
+    var matchStatus = !statusFilter || o.estado === statusFilter;
+    return matchSearch && matchStatus;
+  });
+  var totalPages = Math.ceil(filtered.length / perPage);
+  if (orderPage > totalPages) orderPage = totalPages || 1;
+  var pageOrders = filtered.slice((orderPage - 1) * perPage, orderPage * perPage);
+
+  document.getElementById('ordersTableBody').innerHTML = pageOrders.map(function(o) {
+    var badgeClass = 'badge-' + o.estado.toLowerCase();
+    return '<tr>' +
+      '<td>' + o.id + '</td>' +
+      '<td>' + o.cliente + '</td>' +
+      '<td>' + o.producto + '</td>' +
+      '<td>' + formatCOP(o.total) + '</td>' +
+      '<td><select style="padding:4px 8px; border-radius:4px; border:1px solid var(--border);" onchange="changeStatus(\'' + o.id + '\', this.value)">' +
+        estados.map(function(s) { return '<option value="' + s + '"' + (o.estado === s ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
+      '</select> <span class="badge ' + badgeClass + '">' + o.estado + '</span></td>' +
+      '<td>' + o.fecha + '</td>' +
+      '</tr>';
+  }).join('');
+
+  var pagHTML = '<button ' + (orderPage > 1 ? 'onclick="orderPage=1;renderOrders()"' : 'disabled') + '>«</button>' +
+    '<button ' + (orderPage > 1 ? 'onclick="orderPage--;renderOrders()"' : 'disabled') + '>‹</button>';
+  for (var i = 1; i <= totalPages; i++) {
+    pagHTML += '<button class="' + (i === orderPage ? 'active' : '') + '" onclick="orderPage=' + i + ';renderOrders()">' + i + '</button>';
+  }
+  pagHTML += '<button ' + (orderPage < totalPages ? 'onclick="orderPage++;renderOrders()"' : 'disabled') + '>›</button>' +
+    '<button ' + (orderPage < totalPages ? 'onclick="orderPage=' + totalPages + ';renderOrders()"' : 'disabled') + '>»</button>';
+  document.getElementById('ordersPagination').innerHTML = pagHTML;
+}
+
+function changeStatus(orderId, newStatus) {
+  var order = orders.find(function(o) { return o.id === orderId; });
+  if (order) { order.estado = newStatus; setAdminData('qaxadmin_orders', orders); renderOrders(); }
+}
+
+renderOrders();
+</script>
+</body>
+</html>

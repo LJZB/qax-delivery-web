@@ -1,0 +1,24 @@
+﻿{
+  "name": "stage-4-challenge-2-qaxadmin",
+  "version": "1.0.0",
+  "description": "Stage 4 Challenge 2 - QAXadmin API + Web automation with parallel Playwright projects",
+  "scripts": {
+    "server:install": "npm install --prefix server",
+    "server:start": "npm start --prefix server",
+    "test": "playwright test",
+    "test:desktop": "playwright test --project=desktop-chromium --project=desktop-firefox",
+    "test:mobile": "playwright test --project=mobile-chrome --project=mobile-safari",
+    "test:tablet": "playwright test --project=tablet-chromium",
+    "test:ui": "playwright test --ui",
+    "test:headed": "playwright test --headed --workers=1",
+    "test:debug": "playwright test --debug",
+    "test:report": "playwright show-report"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1"
+  }
+}
