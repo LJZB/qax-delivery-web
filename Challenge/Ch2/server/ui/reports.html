@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/png" href="favicon.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reportes — QAXadmin</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="sidebar-brand">QAX<span>admin</span></div>
+    <nav class="sidebar-nav">
+      <a href="dashboard.html"><span class="nav-icon">📊</span> Dashboard</a>
+      <a href="users.html"><span class="nav-icon">👥</span> Usuarios</a>
+      <a href="products.html"><span class="nav-icon">📦</span> Productos</a>
+      <a href="orders.html"><span class="nav-icon">📋</span> Órdenes</a>
+      <a href="reports.html" class="active"><span class="nav-icon">📈</span> Reportes</a>
+      <a href="index.html" onclick="sessionStorage.removeItem('qaxadmin_logged')" style="color:var(--red);"><span class="nav-icon">🚪</span> Cerrar Sesión</a>
+    </nav>
+  </aside>
+  <main class="content">
+    <div class="content-header">
+      <h1>Reportes</h1>
+      <p>Estadísticas y análisis de datos</p>
+      <button class="btn btn-success" style="margin-top:12px;" onclick="exportCSV()">Exportar CSV</button>
+    </div>
+
+    <div class="chart-container">
+      <div class="chart-card">
+        <h3>Ventas por Mes (COP)</h3>
+        <div class="bar-chart" id="reportBarChart"></div>
+      </div>
+      <div class="chart-card">
+        <h3>Ventas por Categoría</h3>
+        <div class="donut-chart" id="reportDonutChart"></div>
+        <div class="donut-legend" id="donutLegend"></div>
+      </div>
+      <div class="chart-card" style="grid-column: 1 / -1;">
+        <h3>Ingresos Diarios — Mayo 2026</h3>
+        <div class="line-chart" id="reportLineChart"></div>
+      </div>
+    </div>
+  </main>
+</div>
+
+<script src="js/app.js"></script>
+<script>
+if (!isLoggedIn()) window.location.href = 'index.html';
+
+// Bar chart — ventas por mes
+var monthlySales = [
+  { month: 'Ene', value: 32.5 }, { month: 'Feb', value: 28.1 }, { month: 'Mar', value: 35.8 }, { month: 'Abr', value: 40.2 },
+  { month: 'May', value: 45.2 }, { month: 'Jun', value: 42.0 }, { month: 'Jul', value: 48.5 }, { month: 'Ago', value: 51.3 },
+  { month: 'Sep', value: 46.7 }, { month: 'Oct', value: 52.1 }, { month: 'Nov', value: 58.4 }, { month: 'Dic', value: 62.8 }
+];
+var maxVal = Math.max.apply(null, monthlySales.map(function(m) { return m.value; }));
+document.getElementById('reportBarChart').innerHTML = monthlySales.map(function(m) {
+  var height = (m.value / maxVal * 100).toFixed(0);
+  return '<div class="bar-item"><div class="bar-value">' + m.value + 'M</div><div class="bar-fill" style="height:' + height + '%;"></div><div class="bar-label">' + m.month + '</div></div>';
+}).join('');
+
+// Donut chart — ventas por categoría
+var catSales = [
+  { cat: 'Celulares', value: 28, color: '#4f46e5' },
+  { cat: 'Computación', value: 22, color: '#3b82f6' },
+  { cat: 'Electrodomésticos', value: 18, color: '#10b981' },
+  { cat: 'Moda', value: 12, color: '#f59e0b' },
+  { cat: 'Deportes', value: 10, color: '#ef4444' },
+  { cat: 'Otros', value: 10, color: '#8b5cf6' }
+];
+var total = catSales.reduce(function(s, c) { return s + c.value; }, 0);
+var cumulative = 0;
+var gradientParts = catSales.map(function(c) {
+  var start = (cumulative / total * 100).toFixed(1);
+  cumulative += c.value;
+  var end = (cumulative / total * 100).toFixed(1);
+  return c.color + ' ' + start + '% ' + end + '%';
+}).join(', ');
+document.getElementById('reportDonutChart').style.background = 'conic-gradient(' + gradientParts + ')';
+document.getElementById('donutLegend').innerHTML = catSales.map(function(c) {
+  return '<div class="donut-legend-item"><div class="donut-legend-color" style="background:' + c.color + ';"></div>' + c.cat + ' (' + c.value + '%)</div>';
+}).join('');
+
+// Line chart — ingresos diarios mayo
+var dailyIncome = [
+  { day: 1, val: 1.2 }, { day: 2, val: 0.8 }, { day: 3, val: 1.5 }, { day: 4, val: 2.1 }, { day: 5, val: 1.8 },
+  { day: 6, val: 1.1 }, { day: 7, val: 0.9 }, { day: 8, val: 2.3 }, { day: 9, val: 2.8 }, { day: 10, val: 3.1 },
+  { day: 11, val: 2.5 }, { day: 12, val: 2.0 }
+];
+var maxDaily = Math.max.apply(null, dailyIncome.map(function(d) { return d.val; }));
+document.getElementById('reportLineChart').innerHTML = dailyIncome.map(function(d) {
+  var height = (d.val / maxDaily * 160).toFixed(0);
+  return '<div class="line-point"><div style="font-size:10px; color:var(--text-light); margin-bottom:2px;">' + d.val + 'M</div>' +
+    '<div class="line-bar" style="height:' + height + 'px;"></div>' +
+    '<div style="font-size:10px; color:var(--text-light); margin-top:4px;">' + d.day + '</div></div>';
+}).join('');
+
+function exportCSV() {
+  var orders = getAdminData('qaxadmin_orders');
+  var headers = 'ID,Cliente,Producto,Total,Estado,Fecha\n';
+  var rows = orders.map(function(o) {
+    return [o.id, o.cliente, o.producto, o.total, o.estado, o.fecha].join(',');
+  }).join('\n');
+  var csv = headers + rows;
+  var blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  var url = URL.createObjectURL(blob);
+  var a = document.createElement('a');
+  a.href = url;
+  a.download = 'qaxadmin_ordenes_' + new Date().toISOString().split('T')[0] + '.csv';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>

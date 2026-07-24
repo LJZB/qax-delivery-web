@@ -1,0 +1,14 @@
+{
+  "name": "sut-admin",
+  "version": "1.0.0",
+  "description": "SUT QAXadmin — Mock API + UI para entrenamiento de automatización E2E con Playwright",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "swagger-ui-express": "^5.0.0"
+  }
+}
