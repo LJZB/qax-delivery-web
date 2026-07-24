@@ -26,7 +26,7 @@ admin@qaxpert.com / admin123
 
 Se cubren los criterios principales del reto:
 
-- Ejecución paralela con `workers: 3`.
+- Ejecución paralela configurada con mínimo `workers: 3` y validada localmente con `--workers=8`.
 - Uso de `request.get`, `request.post` y `request.put` para preparar y validar datos.
 - Projects de Playwright para Desktop, Mobile y Tablet.
 - Pruebas independientes con datos únicos por project y worker.
@@ -119,6 +119,21 @@ Partes del comando:
 
 Durante las pruebas no es obligatorio levantarlo manualmente, porque `playwright.config.js` usa `webServer` para iniciarlo antes de correr la suite.
 
+## Ejecución automática del servidor
+
+El servidor local de QAXadmin se levanta automáticamente desde `playwright.config.js` mediante la opción `webServer`:
+
+```js
+webServer: {
+  command: 'npm start --prefix server',
+  url: `${BASE_URL}/api/health`,
+  reuseExistingServer: !process.env.CI,
+  timeout: 30 * 1000,
+}
+```
+
+Cuando se ejecuta `pnpm test`, Playwright inicia el SUT, espera a que responda el endpoint `/api/health` y después corre las pruebas. Por eso la suite puede ejecutarse desde cero sin abrir una terminal separada para el servidor.
+
 ## Ejecución
 
 Ejecutar toda la suite en paralelo:
@@ -131,6 +146,18 @@ Partes del comando:
 
 - `pnpm`: usa los scripts del proyecto.
 - `test`: ejecuta `playwright test`.
+
+Ejecutar toda la suite forzando 8 workers:
+
+```bash
+pnpm exec playwright test --workers=8
+```
+
+Partes del comando:
+
+- `pnpm exec`: ejecuta el binario local de Playwright.
+- `playwright test`: corre todos los tests de la suite.
+- `--workers=8`: fuerza hasta 8 workers en paralelo para validar escalabilidad por encima del mínimo requerido.
 
 Ejecutar solo projects Desktop:
 
@@ -252,7 +279,7 @@ Cubre:
 - Health check del SUT con `request.get`.
 - Consulta de estadísticas de órdenes con `request.get`.
 - Creación de orden con `request.post`.
-- Validación de incremento en `totalOrdenes`.
+- Validación tolerante del incremento en `totalOrdenes` para soportar ejecución paralela.
 - Login en UI.
 - Validación de la orden creada en la tabla de Órdenes.
 - Cambio de estado desde la UI.
@@ -263,6 +290,7 @@ Cubre:
 - El SUT del reto es QAXadmin, pero el bloque de casos de prueba del enunciado menciona una apertura de cuenta bancaria. La automatización se enfocó en los criterios de aceptación reales del reto: API + UI, parallel workers y projects multi-dispositivo sobre QAXadmin.
 - La UI sincroniza datos desde API hacia `localStorage`; por eso los Page Objects fuerzan sincronización antes de validar tablas con datos recién creados.
 - Las pruebas agregan datos al servidor en memoria. Para soportar ejecución paralela, cada test genera identificadores únicos usando project, timestamp y worker.
+- Se evitó una race condition en estadísticas globales: con varios workers, otro test puede crear órdenes entre `statsBefore` y `statsAfter`. Por eso se valida que `totalOrdenes` sea mayor o igual al incremento esperado, mientras la orden propia se valida exactamente por `id`. Esta corrección permitió ejecutar la suite completa con `--workers=8` sin fallos.
 - En Windows PowerShell, `npm.ps1` puede bloquearse por política de ejecución. Si ocurre, ejecutar desde Git Bash o usar `npm.cmd` directamente para instalar dependencias del server.
 
 ## Verificación realizada
@@ -272,6 +300,7 @@ Comandos ejecutados durante el desarrollo:
 ```bash
 pnpm exec playwright test --project=desktop-chromium
 pnpm exec playwright test
+pnpm exec playwright test --workers=8
 ```
 
 Resultado de la suite completa:
@@ -280,8 +309,9 @@ Resultado de la suite completa:
 10 passed
 ```
 
-La ejecución completa corrió con:
+La ejecución completa fue validada con 8 workers:
 
 ```text
-Running 10 tests using 3 workers
+Running 10 tests using 8 workers
+10 passed
 ```
